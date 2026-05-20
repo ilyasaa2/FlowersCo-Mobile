@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../auth/login_page.dart';
 
 class ProfilPage extends StatelessWidget {
   const ProfilPage({super.key});
@@ -24,7 +25,43 @@ class ProfilPage extends StatelessWidget {
           _buildMenuTile(Icons.shopping_bag_outlined, "Riwayat Pesanan"),
           _buildMenuTile(Icons.location_on_outlined, "Alamat Saya"),
           _buildMenuTile(Icons.settings_outlined, "Pengaturan"),
-          _buildMenuTile(Icons.logout, "Keluar", color: Colors.red),
+          _buildMenuTile(
+            Icons.logout,
+            "Keluar",
+            color: Colors.red,
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text("Konfirmasi"),
+                  content: const Text("Apakah yakin ingin keluar?"),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text("Batal"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginPage(),
+                          ),
+                          (route) => false,
+                        );
+                      },
+                      child: const Text(
+                        "Keluar",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
@@ -34,12 +71,13 @@ class ProfilPage extends StatelessWidget {
     IconData icon,
     String title, {
     Color color = Colors.black,
+    VoidCallback? onTap,
   }) {
     return ListTile(
       leading: Icon(icon, color: color),
       title: Text(title, style: TextStyle(color: color)),
       trailing: const Icon(Icons.chevron_right),
-      onTap: () {},
+      onTap: onTap,
     );
   }
 }
