@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'core/constants.dart';
 import 'ui/auth/login_page.dart';
 import 'ui/auth/register_page.dart';
 import 'ui/auth/forgot_password_page.dart';
@@ -30,6 +29,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flowers.co',
+
       theme: ThemeData(useMaterial3: true, primarySwatch: Colors.pink),
 
       initialRoute: '/',

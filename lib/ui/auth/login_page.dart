@@ -11,6 +11,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _isObscure = true;
 
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,8 +58,9 @@ class _LoginPageState extends State<LoginPage> {
                       color: Colors.grey,
                     ),
                   ),
-                  const TextField(
-                    decoration: InputDecoration(
+                  TextField(
+                    controller: emailController,
+                    decoration: const InputDecoration(
                       hintText: "Masukkan email Anda",
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.black12),
@@ -93,6 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                   TextField(
+                    controller: passwordController,
                     obscureText: _isObscure,
                     decoration: InputDecoration(
                       hintText: "Masukkan password",
@@ -114,8 +119,28 @@ class _LoginPageState extends State<LoginPage> {
                     height: 55,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Masuk ke Homepage
-                        Navigator.pushReplacementNamed(context, '/home');
+                        String email = emailController.text.trim();
+                        String password = passwordController.text.trim();
+
+                        if (email.isEmpty && password.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Email dan password wajib diisi"),
+                            ),
+                          );
+                        } else if (email.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Email wajib diisi")),
+                          );
+                        } else if (password.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Password wajib diisi"),
+                            ),
+                          );
+                        } else {
+                          Navigator.pushReplacementNamed(context, '/home');
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryPink,
