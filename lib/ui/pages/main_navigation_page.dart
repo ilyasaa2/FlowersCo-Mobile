@@ -1,81 +1,75 @@
 import 'package:flutter/material.dart';
-import '../../core/constants.dart';
 import 'homepage.dart';
 import 'katalog_page.dart';
-import 'keranjang_page.dart';
-import 'profile_page.dart';
+import 'profile_page.dart'; // 👈 Pastikan mengimport profile_page
 
 class MainNavigationPage extends StatefulWidget {
-  const MainNavigationPage({super.key});
+  final int initialIndex;
+
+  const MainNavigationPage({super.key, this.initialIndex = 0});
 
   @override
   State<MainNavigationPage> createState() => _MainNavigationPageState();
 }
 
 class _MainNavigationPageState extends State<MainNavigationPage> {
-  int _selectedIndex = 0;
+  late int _currentIndex;
 
-  final List<Widget> _pages = const [
-    HomePage(),
-    KatalogPage(),
-    KeranjangPage(),
-    ProfilePage(),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialIndex;
   }
+
+  // Daftar halaman utama aplikasi kamu dikumpulkan di sini
+  final List<Widget> _pages = [
+    const HomePage(), // Index 0
+    const KatalogPage(), // Index 1
+    const Scaffold(body: Center(child: Text("Halaman Wishlist"))), // Index 2
+    const ProfilePage(), // Index 3: Tombol keempat mengarah ke Profil Kamu! 👈
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _selectedIndex, children: _pages),
-
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 10,
-            ),
-          ],
+      body: _pages[_currentIndex], // Menampilkan halaman aktif
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: const Color(0xFFBC1A6F),
+        unselectedItemColor: Colors.black45,
+        currentIndex: _currentIndex,
+        selectedLabelStyle: const TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
         ),
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _selectedIndex,
-          selectedItemColor: AppColors.primaryPink,
-          unselectedItemColor: Colors.grey,
-          backgroundColor: Colors.white,
-          elevation: 0,
-
-          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-
-          onTap: _onItemTapped,
-
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_filled),
-              label: "Home",
-            ),
-
-            BottomNavigationBarItem(
-              icon: Icon(Icons.grid_view_rounded),
-              label: "Katalog",
-            ),
-
-            BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_bag_outlined),
-              label: "Keranjang",
-            ),
-
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              label: "Profil",
-            ),
-          ],
-        ),
+        unselectedLabelStyle: const TextStyle(fontSize: 11),
+        onTap: (int index) {
+          setState(() {
+            _currentIndex = index; // Pindah halaman utama saat ditekan
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: 'Beranda',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_florist_outlined),
+            activeIcon: Icon(Icons.local_florist),
+            label: 'Katalog',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border),
+            activeIcon: Icon(Icons.favorite),
+            label: 'Wishlist',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            activeIcon: Icon(Icons.person),
+            label: 'Akun',
+          ),
+        ],
       ),
     );
   }

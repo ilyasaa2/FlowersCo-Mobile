@@ -109,8 +109,8 @@ class RiwayatPesananPage extends StatelessWidget {
         children: [
           // Gambar Thumbnail Bulat Samping Kiri
           Container(
-            width: 64,
-            height: 64,
+            width: 60,
+            height: 60,
             decoration: BoxDecoration(
               color: Colors.grey.shade100,
               borderRadius: BorderRadius.circular(16),
@@ -118,17 +118,21 @@ class RiwayatPesananPage extends StatelessWidget {
             child: const Icon(
               Icons.local_florist,
               color: Color(0xFFD63384),
-              size: 28,
+              size: 26,
             ),
           ),
           const SizedBox(width: 14),
 
-          // Area Teks Tengah
+          // Area Teks Tengah (Dibungkus Expanded agar tidak meluap)
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                // Menggunakan Wrap sebagai pengganti Row agar fleksibel jika layar sempit
+                Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 8,
+                  runSpacing: 4,
                   children: [
                     Text(
                       "Pesanan $orderCode",
@@ -137,7 +141,6 @@ class RiwayatPesananPage extends StatelessWidget {
                         fontSize: 15,
                       ),
                     ),
-                    const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,
@@ -148,6 +151,8 @@ class RiwayatPesananPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
+                        mainAxisSize: MainAxisSize
+                            .min, // Menjaga badge tetap pas dengan teksnya
                         children: [
                           Icon(
                             isSuccess
@@ -170,16 +175,16 @@ class RiwayatPesananPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Text(
                   dateInfo,
                   style: const TextStyle(color: Colors.grey, fontSize: 12),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 Text(
                   "Rp $price",
                   style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFFBC1A6F),
                   ),
@@ -187,6 +192,7 @@ class RiwayatPesananPage extends StatelessWidget {
               ],
             ),
           ),
+          const SizedBox(width: 8),
 
           // Panah Dropdown Kanan
           const Icon(Icons.keyboard_arrow_down, color: Colors.black38),

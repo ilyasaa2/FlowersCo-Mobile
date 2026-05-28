@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/constants.dart';
+import 'keranjang_page.dart';
 
 class KatalogPage extends StatelessWidget {
   const KatalogPage({super.key});
@@ -61,12 +62,40 @@ class KatalogPage extends StatelessWidget {
                         style: TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        "Rp 150.000",
-                        style: TextStyle(
-                          color: AppColors.primaryPink,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      // Menggunakan Row agar harga dan tombol keranjang bisa berdampingan
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Rp 150.000",
+                            style: TextStyle(
+                              color: AppColors.primaryPink,
+                              fontWeight: FontWeight.bold,
+                              fontSize:
+                                  16, // Menambahkan ukuran font agar seimbang
+                            ),
+                          ),
+                          // Tombol Keranjang Belanja
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const KeranjangPage(),
+                                ),
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.shopping_cart_outlined,
+                              color: Color(
+                                0xFFBC1A6F,
+                              ), // Menyesuaikan tema warna KeranjangPage
+                            ),
+                            constraints:
+                                const BoxConstraints(), // Menghilangkan padding bawaan icon button agar rapi
+                            padding: EdgeInsets.zero,
+                          ),
+                        ],
                       ),
                     ],
                   ),
