@@ -1,4 +1,29 @@
 import 'package:flutter/material.dart';
+import 'ui/auth/login_page.dart';
+import 'ui/auth/register_page.dart';
+import 'ui/auth/forgot_password_page.dart';
+import 'ui/pages/homepage.dart';
+import 'ui/pages/katalog_page.dart';
+import 'ui/pages/keranjang_page.dart';
+import 'ui/pages/pembayaran_page.dart';
+import 'ui/pages/profile_page.dart';
+import 'ui/pages/lengkapi_profil_page.dart';
+import 'ui/pages/riwayat_pesanan_page.dart';
+import 'ui/pages/buket_saya_page.dart';
+import 'ui/pages/lacak_pesanan_page.dart';
+import 'ui/pages/keamanan_page.dart';
+import 'ui/pages/alamat_pengiriman_page.dart';
+import 'ui/pages/notifikasi_page.dart';
+import 'ui/pages/pusat_bantuan_page.dart';
+import 'ui/pages/kebijakan_privasi_page.dart';
+import 'ui/pages/tentang_kami_page.dart';
+import 'ui/pages/main_navigation_page.dart';
+import 'ui/pages/panduan_perawatan_page.dart';
+import 'ui/pages/perpustakaan_tanaman_page.dart';
+import 'ui/pages/pembayaran_berhasil_page.dart';
+import 'ui/pages/detail_tanaman_page.dart';
+import 'ui/pages/detail_tip_page.dart';
+import 'ui/pages/selesai_pembayaran_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,116 +32,59 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
+      debugShowCheckedModeBanner: false,
+      title: 'Flowers.co',
+      theme: ThemeData(useMaterial3: true, primarySwatch: Colors.pink),
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+      initialRoute: '/',
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
+      routes: {
+        '/': (context) => const LoginPage(),
+        '/register': (context) => const RegisterPage(),
+        '/forgot-password': (context) => const ForgotPasswordPage(),
+        '/home': (context) => const MainNavigationPage(),
+        '/katalog': (context) => const KatalogPage(),
+        '/keranjang': (context) => const KeranjangPage(),
+        '/pembayaran': (context) => const PembayaranPage(),
+        '/profil': (context) => const ProfilePage(),
+        '/lengkapi-profil': (context) => const LengkapiProfilPage(),
+        '/riwayat-pesanan': (context) => const RiwayatPesananPage(),
+        '/buket-saya': (context) => const BuketSayaPage(),
+        '/lacak-pesanan': (context) => const LacakPesananPage(),
+        '/selesai-pembayaran': (context) => const SelesaiPage(),
+        '/keamanan': (context) => const KeamananPage(),
+        '/alamat-pengiriman': (context) => const AlamatPengirimanPage(),
+        '/notifikasi': (context) => const NotifikasiPage(),
+        '/pusat-bantuan': (context) => const PusatBantuanPage(),
+        '/kebijakan-privasi': (context) => const KebijakanPrivasiPage(),
+        '/tentang-kami': (context) => const TentangKamiPage(),
+        '/panduan-perawatan': (context) => const PanduanPerawatanPage(),
+        '/perpustakaan-tanaman': (context) => const PerpustakaanTanamanPage(),
+        '/pembayaran-berhasil': (context) => const PembayaranBerhasilPage(),
 
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+        '/detail-tanaman': (context) {
+          final args =
+              ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>;
 
-  final String title;
+          return DetailTanamanPage(
+            plant: args['plant'],
+            isFavorite: args['isFavorite'],
+            onFavoriteToggle: args['onFavoriteToggle'],
+          );
+        },
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+        '/detail-tip': (context) {
+          final tip =
+              ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>;
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+          return DetailTipPage(tip: tip);
+        },
+      },
     );
   }
 }
