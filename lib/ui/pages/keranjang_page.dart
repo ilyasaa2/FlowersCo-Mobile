@@ -8,77 +8,32 @@ class KeranjangPage extends StatefulWidget {
 }
 
 class _KeranjangPageState extends State<KeranjangPage> {
-  // Simulasi data keranjang dengan gambar
+  // Data produk di keranjang
   final List<Map<String, dynamic>> _cartItems = [
     {
       "id": 1,
       "name": "Rose Bouquet \"Eternal Love\"",
-      "subtitle": "Warna: Deep Red | Qty: 1",
+      "subtitle": "Warna: Deep Red",
       "price": 450000,
+      "qty": 1,
       "imageUrl":
           "https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=200",
     },
     {
       "id": 2,
       "name": "Peony Luxe Box",
-      "subtitle": "Tipe: Signature | Qty: 1",
+      "subtitle": "Tipe: Signature",
       "price": 850000,
+      "qty": 1,
       "imageUrl":
           "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=200",
     },
   ];
 
-  // State untuk kurir pengiriman
-  String _selectedDelivery = "Express";
-  final int _expressPrice = 50000;
-  final int _standardPrice = 25000;
-
-  // 🌟 STATE BARU: Untuk menyimpan metode pembayaran yang dipilih
-  String _selectedPayment = "Transfer Bank";
-
-  // Daftar pilihan metode pembayaran beserta icon-nya
-  final List<Map<String, dynamic>> _paymentMethods = [
-    {
-      "id": "Transfer Bank",
-      "title": "Transfer Bank (BCA/Mandiri)",
-      "subtitle": "Dicek otomatis, bebas biaya admin",
-      "icon": Icons.account_balance_outlined,
-    },
-    {
-      "id": "E-Wallet",
-      "title": "E-Wallet (Dana/OVO/Gopay)",
-      "subtitle": "Instan menggunakan QRIS / Aplikasi",
-      "icon": Icons.account_balance_wallet_outlined,
-    },
-    {
-      "id": "Kartu Kredit",
-      "title": "Kartu Kredit / Debit",
-      "subtitle": "Visa, Mastercard, atau JCB",
-      "icon": Icons.credit_card_outlined,
-    },
-    {
-      "id": "COD",
-      "title": "Bayar di Tempat (COD)",
-      "subtitle": "Bayar tunai saat kurir tiba",
-      "icon": Icons.payments_outlined,
-    },
-  ];
-
-  // Controller untuk Form Alamat
-  final TextEditingController _nameController = TextEditingController(
-    text: "John Doe",
-  );
-  final TextEditingController _phoneController = TextEditingController(
-    text: "+62 812 3456 7890",
-  );
-  final TextEditingController _addressController = TextEditingController(
-    text: "Jl. Bunga Melati No. 12, Jakarta Selatan",
-  );
-
   int _calculateSubtotal() {
     int total = 0;
     for (var item in _cartItems) {
-      total += item["price"] as int;
+      total += (item["price"] as int) * (item["qty"] as int);
     }
     return total;
   }
@@ -99,303 +54,174 @@ class _KeranjangPageState extends State<KeranjangPage> {
   }
 
   @override
-  void dispose() {
-    _nameController.dispose();
-    _phoneController.dispose();
-    _addressController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     int subtotal = _calculateSubtotal();
-    int shippingCost = (_selectedDelivery == "Express")
-        ? _expressPrice
-        : _standardPrice;
-    int tax = (subtotal * 0.11).round();
-    int totalFinal = subtotal + shippingCost + tax;
 
     return Scaffold(
       backgroundColor: const Color(0xFFFDF8F9),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFFBC1A6F)),
-          onPressed: () => Navigator.pop(context),
-        ),
         centerTitle: true,
         title: const Text(
-          "Flowers.co",
+          "Keranjang Belanja",
           style: TextStyle(
             color: Color(0xFFBC1A6F),
-            fontSize: 22,
-            fontStyle: FontStyle.italic,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.share_outlined, color: Color(0xFFBC1A6F)),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: _cartItems.isEmpty
           ? const Center(child: Text("Keranjang Anda Kosong"))
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // SECTION 1: ALAMAT PENGIRIMAN
-                  _buildSectionContainer(
-                    title: "Alamat Pengiriman",
-                    icon: Icons.location_on_outlined,
-                    child: Column(
-                      children: [
-                        _buildInputField(
-                          label: "Nama Lengkap",
-                          controller: _nameController,
+          : Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: _cartItems.length,
+                    itemBuilder: (context, index) {
+                      final item = _cartItems[index];
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.02),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 12),
-                        _buildInputField(
-                          label: "Nomor Telepon",
-                          controller: _phoneController,
-                        ),
-                        const SizedBox(height: 12),
-                        _buildInputField(
-                          label: "Alamat Lengkap",
-                          controller: _addressController,
-                          maxLines: 2,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // SECTION 2: METODE PENGIRIMAN
-                  _buildSectionContainer(
-                    title: "Metode Pengiriman",
-                    icon: Icons.local_shipping_outlined,
-                    child: Column(
-                      children: [
-                        _buildDeliveryOption(
-                          type: "Express",
-                          title: "Express Delivery",
-                          duration: "Tiba dalam 2-4 Jam",
-                          price: _expressPrice,
-                        ),
-                        const SizedBox(height: 12),
-                        _buildDeliveryOption(
-                          type: "Standard",
-                          title: "Standard Delivery",
-                          duration: "Tiba Besok / Same Day",
-                          price: _standardPrice,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // 🌟 SECTION 3: METODE PEMBAYARAN (SEKARANG BISA DIPILIH)
-                  _buildSectionContainer(
-                    title: "Metode Pembayaran",
-                    icon: Icons.payment_outlined,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: _paymentMethods.length,
-                      itemBuilder: (context, index) {
-                        final method = _paymentMethods[index];
-                        bool isSelected = _selectedPayment == method["id"];
-
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selectedPayment = method["id"];
-                            });
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(bottom: 10),
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? const Color(0xFFFFF5F8)
-                                  : Colors.white,
+                        child: Row(
+                          children: [
+                            ClipRRect(
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: isSelected
-                                    ? const Color(0xFFBC1A6F)
-                                    : Colors.black12,
-                                width: isSelected ? 1.5 : 1,
+                              child: Image.network(
+                                item["imageUrl"],
+                                width: 70,
+                                height: 70,
+                                fit: BoxFit.cover,
                               ),
                             ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  method["icon"],
-                                  color: isSelected
-                                      ? const Color(0xFFBC1A6F)
-                                      : Colors.black45,
-                                  size: 22,
-                                ),
-                                const SizedBox(width: 14),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        method["title"],
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                          color: isSelected
-                                              ? const Color(0xFFBC1A6F)
-                                              : Colors.black87,
-                                        ),
-                                      ),
-                                      Text(
-                                        method["subtitle"],
-                                        style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 11,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                // Indikator Radio lingkaran kecil di kanan
-                                Icon(
-                                  isSelected
-                                      ? Icons.radio_button_checked
-                                      : Icons.radio_button_off,
-                                  color: isSelected
-                                      ? const Color(0xFFBC1A6F)
-                                      : Colors.black38,
-                                  size: 20,
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // SECTION 4: RINGKASAN PESANAN & PRODUK
-                  _buildSectionContainer(
-                    title: "Ringkasan Pesanan",
-                    child: Column(
-                      children: [
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: _cartItems.length,
-                          itemBuilder: (context, index) {
-                            final item = _cartItems[index];
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 12.0),
-                              child: Row(
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: Image.network(
-                                      item["imageUrl"],
-                                      width: 60,
-                                      height: 60,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) =>
-                                              Container(
-                                                width: 60,
-                                                height: 60,
-                                                color: Colors.grey.shade200,
-                                                child: const Icon(
-                                                  Icons.image,
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
+                                  Text(
+                                    item["name"],
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
                                     ),
                                   ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          item["name"],
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                        Text(
-                                          item["subtitle"],
-                                          style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 11,
-                                          ),
-                                        ),
-                                        Text(
-                                          _formatRupiah(item["price"]),
-                                          style: const TextStyle(
-                                            color: Color(0xFFBC1A6F),
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                      ],
+                                  Text(
+                                    item["subtitle"],
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    _formatRupiah(item["price"]),
+                                    style: const TextStyle(
+                                      color: Color(0xFFBC1A6F),
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ],
                               ),
-                            );
-                          },
+                            ),
+                            // Tombol Tambah/Kurang Quantity
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.remove_circle_outline,
+                                    color: Colors.grey,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      if (item["qty"] > 1) {
+                                        item["qty"]--;
+                                      } else {
+                                        _cartItems.removeAt(index);
+                                      }
+                                    });
+                                  },
+                                ),
+                                Text(
+                                  "${item["qty"]}",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.add_circle_outline,
+                                    color: Color(0xFFBC1A6F),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      item["qty"]++;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                        const Divider(height: 24, color: Colors.black12),
-
-                        _buildPriceRow("Subtotal", _formatRupiah(subtotal)),
-                        const SizedBox(height: 8),
-                        _buildPriceRow(
-                          "Biaya Pengiriman (${_selectedDelivery})",
-                          _formatRupiah(shippingCost),
-                        ),
-                        const SizedBox(height: 8),
-                        _buildPriceRow("Pajak (11%)", _formatRupiah(tax)),
-                        const Divider(height: 32, color: Colors.black12),
-
+                      );
+                    },
+                  ),
+                ),
+                // Bagian Bawah: Total & Tombol Lanjut ke Pembayaran
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(24),
+                      topRight: Radius.circular(24),
+                    ),
+                  ),
+                  child: SafeArea(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
-                              "Total",
+                              "Subtotal",
                               style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                             Text(
-                              _formatRupiah(totalFinal),
+                              _formatRupiah(subtotal),
                               style: const TextStyle(
-                                fontSize: 20,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xFFBC1A6F),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 20),
-
+                        const SizedBox(height: 16),
                         SizedBox(
                           width: double.infinity,
                           height: 48,
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, '/lacak-pesanan');
+                              // 🌟 NAVIGASI: Pindah ke halaman pembayaran
+                              Navigator.pushNamed(context, '/pembayaran');
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFBC1A6F),
@@ -403,197 +229,22 @@ class _KeranjangPageState extends State<KeranjangPage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              elevation: 0,
                             ),
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Bayar Sekarang",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                                SizedBox(width: 8),
-                                Icon(Icons.arrow_forward, size: 16),
-                              ],
+                            child: const Text(
+                              "Lanjut ke Pembayaran",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
                             ),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        const Text(
-                          "SECURE CHECKOUT POWERED BY FLOWERS.CO",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 9,
-                            letterSpacing: 0.5,
                           ),
                         ),
                       ],
                     ),
                   ),
-                ],
-              ),
-            ),
-    );
-  }
-
-  Widget _buildSectionContainer({
-    required String title,
-    IconData? icon,
-    required Widget child,
-  }) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.02),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              if (icon != null) ...[
-                Icon(icon, color: const Color(0xFFBC1A6F), size: 18),
-                const SizedBox(width: 8),
-              ],
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          child,
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInputField({
-    required String label,
-    required TextEditingController controller,
-    int maxLines = 1,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 11,
-            color: Colors.black54,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 4),
-        TextField(
-          controller: controller,
-          maxLines: maxLines,
-          style: const TextStyle(fontSize: 13),
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: const Color(0xFFFFF9FA),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 10,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFFFCDCE2)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFFBC1A6F)),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDeliveryOption({
-    required String type,
-    required String title,
-    required String duration,
-    required int price,
-  }) {
-    bool isSelected = _selectedDelivery == type;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedDelivery = type;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFFF5F8) : Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected ? const Color(0xFFBC1A6F) : Colors.black12,
-            width: isSelected ? 1.5 : 1,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
-                    color: isSelected
-                        ? const Color(0xFFBC1A6F)
-                        : Colors.black87,
-                  ),
-                ),
-                Text(
-                  duration,
-                  style: const TextStyle(color: Colors.grey, fontSize: 11),
                 ),
               ],
             ),
-            Text(
-              _formatRupiah(price),
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPriceRow(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(color: Colors.black54, fontSize: 13),
-        ),
-        Text(
-          value,
-          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
-        ),
-      ],
     );
   }
 }

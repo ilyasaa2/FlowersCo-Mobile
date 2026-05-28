@@ -5,6 +5,7 @@ import 'ui/auth/forgot_password_page.dart';
 import 'ui/pages/homepage.dart';
 import 'ui/pages/katalog_page.dart';
 import 'ui/pages/keranjang_page.dart';
+import 'ui/pages/pembayaran_page.dart';
 import 'ui/pages/profile_page.dart';
 import 'ui/pages/lengkapi_profil_page.dart';
 import 'ui/pages/riwayat_pesanan_page.dart';
@@ -39,12 +40,13 @@ class MyApp extends StatelessWidget {
         '/': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
         '/forgot-password': (context) => const ForgotPasswordPage(),
-        
+
         // 👈 2. UBAH DI SINI: Ketika rute '/home' dipanggil, arahkan ke MainNavigationPage
-        '/home': (context) => const MainNavigationPage(), 
-        
-        '/katalog': (context) => const KatalogPage(), 
-        '/keranjang': (context) => const KeranjangPage(), 
+        '/home': (context) => const MainNavigationPage(),
+
+        '/katalog': (context) => const KatalogPage(),
+        '/keranjang': (context) => const KeranjangPage(),
+        '/pembayaran': (context) => const PembayaranPage(),
         '/profil': (context) => const ProfilePage(),
         '/lengkapi-profil': (context) => const LengkapiProfilPage(),
         '/riwayat-pesanan': (context) => const RiwayatPesananPage(),

@@ -4,14 +4,22 @@ import 'katalog_page.dart';
 import 'profile_page.dart'; // 👈 Pastikan mengimport profile_page
 
 class MainNavigationPage extends StatefulWidget {
-  const MainNavigationPage({super.key});
+  final int initialIndex;
+
+  const MainNavigationPage({super.key, this.initialIndex = 0});
 
   @override
   State<MainNavigationPage> createState() => _MainNavigationPageState();
 }
 
 class _MainNavigationPageState extends State<MainNavigationPage> {
-  int _currentIndex = 0;
+  late int _currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialIndex;
+  }
 
   // Daftar halaman utama aplikasi kamu dikumpulkan di sini
   final List<Widget> _pages = [

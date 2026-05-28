@@ -181,6 +181,7 @@ class ProfilePage extends StatelessWidget {
             ),
 
             // --- TOMBOL KELUAR ---
+            // --- TOMBOL KELUAR ---
             Padding(
               padding: const EdgeInsets.all(20),
               child: Container(
@@ -199,11 +200,48 @@ class ProfilePage extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    Navigator.pushReplacementNamed(
-                      context,
-                      '/',
-                    ); // Kembali ke Login
-                  },
+                    // 🌟 DI SINI: Kode showDialog dimasukkan ke dalam onTap
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("Konfirmasi Keluar"),
+                          content: const Text(
+                            "Apakah Anda yakin ingin keluar dari akun Flowers.co?",
+                          ),
+                          actions: [
+                            // Tombol Batal
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context); // Menutup pop-up saja
+                              },
+                              child: const Text(
+                                "Batal",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                            // Tombol Keluar
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context); // Menutup pop-up
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  '/',
+                                ); // Redirect ke Login
+                              },
+                              child: const Text(
+                                "Keluar",
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }, // 👈 Batas akhir onTap
                 ),
               ),
             ),
