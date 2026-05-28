@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'homepage.dart';
 import 'katalog_page.dart';
-import 'profile_page.dart'; // 👈 Pastikan mengimport profile_page
+import 'profile_page.dart';
+import 'wishlist_page.dart';
 
 class MainNavigationPage extends StatefulWidget {
   final int initialIndex;
@@ -25,7 +26,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   final List<Widget> _pages = [
     const HomePage(), // Index 0
     const KatalogPage(), // Index 1
-    const Scaffold(body: Center(child: Text("Halaman Wishlist"))), // Index 2
+    const WishlistPage(), // Index 2
     const ProfilePage(), // Index 3: Tombol keempat mengarah ke Profil Kamu! 👈
   ];
 

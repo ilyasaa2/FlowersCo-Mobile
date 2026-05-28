@@ -8,12 +8,19 @@ class KatalogPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(
-        0xFFF8F9FA,
-      ), // Background abu-abu sangat muda
+      backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Color(0xFFD63384),
+          ),
+          onPressed: () {
+            Navigator.pushNamed(context, '/');
+          },
+        ),
         centerTitle: true,
         title: const Text(
           "Katalog Bunga",
@@ -78,7 +85,6 @@ class KatalogPage extends StatelessWidget {
                         style: TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                       const SizedBox(height: 8),
-                      // Menggunakan Row agar harga dan tombol keranjang bisa berdampingan
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -87,29 +93,23 @@ class KatalogPage extends StatelessWidget {
                             style: TextStyle(
                               color: AppColors.primaryPink,
                               fontWeight: FontWeight.bold,
-                              fontSize:
-                                  16, // Menambahkan ukuran font agar seimbang
+                              fontSize: 16,
                             ),
                           ),
-                          // Tombol Keranjang Belanja
                           IconButton(
                             onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  // Bagian ini diganti dengan Whislist Page biar mengarah ke page Whislist
                                   builder: (context) => const KeranjangPage(),
                                 ),
                               );
                             },
                             icon: const Icon(
                               Icons.favorite_border,
-                              color: Color(
-                                0xFFBC1A6F,
-                              ), // Menyesuaikan tema warna KeranjangPage
+                              color: Color(0xFFBC1A6F),
                             ),
-                            constraints:
-                                const BoxConstraints(), // Menghilangkan padding bawaan icon button agar rapi
+                            constraints: const BoxConstraints(),
                             padding: EdgeInsets.zero,
                           ),
                         ],

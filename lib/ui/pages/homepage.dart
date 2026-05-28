@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({super.key}); 
 
-  // WIDGET HELPER: Kartu Kesempatan
   Widget _buildOccasionCard(String title, String imageUrl) {
     return Container(
       decoration: BoxDecoration(
@@ -32,7 +31,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // WIDGET HELPER: Item List Produk Vertikal
   Widget _buildVerticalProductCard({
     required String name,
     required String price,
@@ -151,13 +149,80 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(color: Color(0xFFD63384)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.person,
+                      size: 35,
+                      color: Color(0xFFD63384),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "Menu Flowers.co",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.home_outlined,
+                color: Color(0xFFD63384),
+              ),
+              title: const Text('Beranda'),
+              onTap: () {
+                Navigator.pop(context); 
+                Navigator.pushNamed(context, '/'); 
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.admin_panel_settings_outlined,
+                color: Color(0xFFD63384),
+              ),
+              title: const Text('Mode Admin'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.settings_outlined, color: Colors.grey),
+              title: const Text('Pengaturan Aplikasi'),
+              onTap: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+      ),
+
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Color(0xFFBC1A6F)),
-          onPressed: () {},
+        leading: Builder(
+          builder: (internalContext) => IconButton(
+            icon: const Icon(Icons.menu, color: Color(0xFFBC1A6F)),
+            onPressed: () {
+              Scaffold.of(internalContext).openDrawer(); 
+            },
+          ),
         ),
+        
         centerTitle: true,
         title: const Text(
           "Flowers.co",
@@ -283,7 +348,7 @@ class HomePage extends StatelessWidget {
                 childAspectRatio: 1.0,
                 children: [
                   _buildOccasionCard(
-                    "Ulang Tahun",
+                    "Ulang Birthday",
                     'https://images.unsplash.com/photo-1533616688419-b7a585564566?q=80&w=500',
                   ),
                   _buildOccasionCard(
