@@ -10,10 +10,87 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: const Color(
         0xFFF8F9FA,
       ), // Background abu-abu sangat muda
+      // --- 1. MENAMBAHKAN SIDEBAR (DRAWER) ---
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(color: Color(0xFFD63384)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.person,
+                      size: 35,
+                      color: Color(0xFFD63384),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "Menu Flowers.co",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.home_outlined,
+                color: Color(0xFFD63384),
+              ),
+              title: const Text('Beranda'),
+              onTap: () {
+                Navigator.pop(context); // Tutup drawer
+                Navigator.pushNamed(context, '/'); // Arahkan ke Beranda/Home
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.admin_panel_settings_outlined,
+                color: Color(0xFFD63384),
+              ),
+              title: const Text('Mode Admin'),
+              onTap: () {
+                Navigator.pop(context);
+                // Tambahkan navigasi ke halaman admin jika diperlukan
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.settings_outlined, color: Colors.grey),
+              title: const Text('Pengaturan Aplikasi'),
+              onTap: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+      ),
+
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
+
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(
+              Icons.menu, // Ikon garis tiga (Hamburger Menu)
+              color: Color(0xFFD63384),
+            ),
+            onPressed: () {
+              Scaffold.of(context).openDrawer(); // Membuka Drawer
+            },
+          ),
+        ),
+
         title: const Text(
           "Flowers.co",
           style: TextStyle(
@@ -181,7 +258,6 @@ class ProfilePage extends StatelessWidget {
             ),
 
             // --- TOMBOL KELUAR ---
-            // --- TOMBOL KELUAR ---
             Padding(
               padding: const EdgeInsets.all(20),
               child: Container(
@@ -200,7 +276,6 @@ class ProfilePage extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    // 🌟 DI SINI: Kode showDialog dimasukkan ke dalam onTap
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -210,24 +285,19 @@ class ProfilePage extends StatelessWidget {
                             "Apakah Anda yakin ingin keluar dari akun Flowers.co?",
                           ),
                           actions: [
-                            // Tombol Batal
                             TextButton(
                               onPressed: () {
-                                Navigator.pop(context); // Menutup pop-up saja
+                                Navigator.pop(context);
                               },
                               child: const Text(
                                 "Batal",
                                 style: TextStyle(color: Colors.grey),
                               ),
                             ),
-                            // Tombol Keluar
                             TextButton(
                               onPressed: () {
-                                Navigator.pop(context); // Menutup pop-up
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  '/',
-                                ); // Redirect ke Login
+                                Navigator.pop(context);
+                                Navigator.pushReplacementNamed(context, '/');
                               },
                               child: const Text(
                                 "Keluar",
@@ -241,7 +311,7 @@ class ProfilePage extends StatelessWidget {
                         );
                       },
                     );
-                  }, // 👈 Batas akhir onTap
+                  },
                 ),
               ),
             ),
@@ -252,7 +322,6 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  // Widget Helper untuk Kartu Statistik
   Widget _buildStatCard(IconData icon, String title, String value) {
     return Column(
       children: [
@@ -271,7 +340,6 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  // Widget Helper untuk Judul Seksi
   Widget _buildSectionTitle(String title) {
     return Container(
       width: double.infinity,
@@ -288,7 +356,6 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  // Widget Helper untuk Item Menu
   Widget _buildMenuItem(
     BuildContext context,
     IconData icon,

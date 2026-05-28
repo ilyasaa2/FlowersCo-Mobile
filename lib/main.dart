@@ -24,7 +24,6 @@ import 'ui/pages/pembayaran_berhasil_page.dart';
 import 'ui/pages/detail_tanaman_page.dart';
 import 'ui/pages/detail_tip_page.dart';
 import 'ui/pages/selesai_pembayaran_page.dart';
-import 'widgets/sidebar.dart';
 
 void main() {
   runApp(const MyApp());

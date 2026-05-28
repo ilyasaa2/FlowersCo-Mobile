@@ -12,9 +12,12 @@ class BuketSayaPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        // 🌟 MENGGANTI SIDEBAR MENJADI TOMBOL KEMBALI
         leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.black54),
-          onPressed: () {},
+          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          onPressed: () {
+            Navigator.pop(context); // Otomatis kembali ke halaman sebelumnya
+          },
         ),
         centerTitle: true,
         title: const Text(
@@ -173,8 +176,10 @@ class BuketSayaPage extends StatelessWidget {
               _buildNavItem(Icons.favorite_border, "Wishlist", false, () {
                 Navigator.pushReplacementNamed(context, '/wishlist');
               }),
-              // Sesuai figma, halaman "Buket Saya" / Akun ditandai Aktif (True)
-              _buildNavItem(Icons.person, "Akun", true, () {}),
+              // 🌟 HIGHLIGHT DIHILANGKAN: Mengubah isActive dari true menjadi false
+              _buildNavItem(Icons.person_outline, "Akun", false, () {
+                Navigator.pushReplacementNamed(context, '/profile');
+              }),
             ],
           ),
         ),
