@@ -7,8 +7,11 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(
-        0xFFF8F9FA,
+      backgroundColor: const Color.fromARGB(
+        255,
+        250,
+        248,
+        250,
       ), // Background abu-abu sangat muda
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -20,16 +23,15 @@ class ProfilePage extends StatelessWidget {
             color: Color(0xFFD63384),
             fontFamily: 'PlayfairDisplay',
             fontWeight: FontWeight.bold,
-            fontStyle: FontStyle.italic,
           ),
         ),
         actions: [
           IconButton(
-            onPressed: () {},
             icon: const Icon(
               Icons.shopping_bag_outlined,
               color: Color(0xFFD63384),
             ),
+            onPressed: () => Navigator.pushNamed(context, '/keranjang'),
           ),
         ],
       ),

@@ -171,11 +171,10 @@ class HomePage extends StatelessWidget {
           IconButton(
             icon: const Icon(
               Icons.shopping_bag_outlined,
-              color: Color(0xFFBC1A6F),
+              color: Color(0xFFD63384),
             ),
-            onPressed: () {},
+            onPressed: () => Navigator.pushNamed(context, '/keranjang'),
           ),
-          const SizedBox(width: 8),
         ],
       ),
       body: SingleChildScrollView(

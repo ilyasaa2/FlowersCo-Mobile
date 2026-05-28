@@ -6,15 +6,13 @@ class BuketSayaPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(
-        0xFFFDF8F9,
-      ), // Background pink soft transparan sesuai figma
+      backgroundColor: const Color(0xFFFDF8F9),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.black54),
-          onPressed: () {},
+          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
         title: const Text(
@@ -30,7 +28,7 @@ class BuketSayaPage extends StatelessWidget {
           IconButton(
             icon: const Icon(
               Icons.shopping_bag_outlined,
-              color: Colors.black87,
+              color: Color(0xFFD63384),
             ),
             onPressed: () => Navigator.pushNamed(context, '/keranjang'),
           ),
@@ -41,6 +39,7 @@ class BuketSayaPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 10),
             const Text(
               "Buket Saya",
               style: TextStyle(
@@ -142,81 +141,6 @@ class BuketSayaPage extends StatelessWidget {
               isPrimaryButton: false,
               hasHeartIcon: false,
               onButtonTap: () {},
-            ),
-          ],
-        ),
-      ),
-
-      // --- TAMBAHAN NAVBAR SESUAI FIGMA ---
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.02),
-              blurRadius: 10,
-              offset: const Offset(0, -4),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(Icons.home_outlined, "Beranda", false, () {
-                Navigator.pushReplacementNamed(context, '/homepage');
-              }),
-              _buildNavItem(Icons.local_florist_outlined, "Katalog", false, () {
-                Navigator.pushReplacementNamed(context, '/katalog');
-              }),
-              _buildNavItem(Icons.favorite_border, "Wishlist", false, () {
-                Navigator.pushReplacementNamed(context, '/wishlist');
-              }),
-              // Sesuai figma, halaman "Buket Saya" / Akun ditandai Aktif (True)
-              _buildNavItem(Icons.person, "Akun", true, () {}),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // Helper Widget untuk Item Navigasi Kustom (Efek Pill Pink)
-  Widget _buildNavItem(
-    IconData icon,
-    String label,
-    bool isActive,
-    VoidCallback onTap,
-  ) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(
-          horizontal: isActive ? 20 : 10,
-          vertical: isActive ? 8 : 4,
-        ),
-        decoration: BoxDecoration(
-          color: isActive ? const Color(0xFFD63384) : Colors.transparent,
-          borderRadius: BorderRadius.circular(25),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              color: isActive ? Colors.white : const Color(0xFF5A4A4A),
-              size: 24,
-            ),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
-                color: isActive ? Colors.white : const Color(0xFF5A4A4A),
-              ),
             ),
           ],
         ),

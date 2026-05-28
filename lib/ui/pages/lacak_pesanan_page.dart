@@ -29,7 +29,7 @@ class LacakPesananPage extends StatelessWidget {
               Icons.shopping_bag_outlined,
               color: Color(0xFFD63384),
             ),
-            onPressed: () {},
+            onPressed: () => Navigator.pushNamed(context, '/keranjang'),
           ),
         ],
       ),
