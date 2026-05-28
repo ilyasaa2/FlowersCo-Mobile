@@ -16,7 +16,12 @@ import 'ui/pages/notifikasi_page.dart';
 import 'ui/pages/pusat_bantuan_page.dart';
 import 'ui/pages/kebijakan_privasi_page.dart';
 import 'ui/pages/tentang_kami_page.dart';
-import 'ui/pages/main_navigation_page.dart'; // 👈 1. IMPORT FILE NAVIGASI UTAMA KAMU DI SINI
+import 'ui/pages/main_navigation_page.dart';
+import 'ui/pages/panduan_perawatan_page.dart';
+import 'ui/pages/perpustakaan_tanaman_page.dart';
+import 'ui/pages/pembayaran_berhasil_page.dart';
+import 'ui/pages/detail_tanaman_page.dart';
+import 'ui/pages/detail_tip_page.dart'; // 👈 1. IMPORT FILE NAVIGASI UTAMA KAMU DI SINI
 
 void main() {
   runApp(const MyApp());
@@ -33,18 +38,17 @@ class MyApp extends StatelessWidget {
 
       theme: ThemeData(useMaterial3: true, primarySwatch: Colors.pink),
 
-      initialRoute: '/', // Mulai pertama kali dari halaman Login
+      initialRoute:
+          '/panduan-perawatan', // Mulai pertama kali dari halaman Login
 
       routes: {
         '/': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
         '/forgot-password': (context) => const ForgotPasswordPage(),
-        
         // 👈 2. UBAH DI SINI: Ketika rute '/home' dipanggil, arahkan ke MainNavigationPage
-        '/home': (context) => const MainNavigationPage(), 
-        
-        '/katalog': (context) => const KatalogPage(), 
-        '/keranjang': (context) => const KeranjangPage(), 
+        '/home': (context) => const MainNavigationPage(),
+        '/katalog': (context) => const KatalogPage(),
+        '/keranjang': (context) => const KeranjangPage(),
         '/profil': (context) => const ProfilePage(),
         '/lengkapi-profil': (context) => const LengkapiProfilPage(),
         '/riwayat-pesanan': (context) => const RiwayatPesananPage(),
@@ -56,6 +60,25 @@ class MyApp extends StatelessWidget {
         '/pusat-bantuan': (context) => const PusatBantuanPage(),
         '/kebijakan-privasi': (context) => const KebijakanPrivasiPage(),
         '/tentang-kami': (context) => const TentangKamiPage(),
+        '/panduan-perawatan': (context) => const PanduanPerawatanPage(),
+        '/perpustakaan-tanaman': (context) => const PerpustakaanTanamanPage(),
+        '/pembayaran-berhasil': (context) => const PembayaranBerhasilPage(),
+        '/detail-tanaman': (context) {
+          final args =
+              ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>;
+          return DetailTanamanPage(
+            plant: args['plant'],
+            isFavorite: args['isFavorite'],
+            onFavoriteToggle: args['onFavoriteToggle'],
+          );
+        },
+        '/detail-tip': (context) {
+          final tip =
+              ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>;
+          return DetailTipPage(tip: tip);
+        },
       },
     );
   }
