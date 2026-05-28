@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
 
       theme: ThemeData(useMaterial3: true, primarySwatch: Colors.pink),
 
-      initialRoute: '/',
+      initialRoute: '/buket-saya',
 
       routes: {
         '/': (context) => const LoginPage(),
