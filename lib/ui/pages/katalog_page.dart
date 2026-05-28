@@ -8,14 +8,30 @@ class KatalogPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(
+        0xFFF8F9FA,
+      ), // Background abu-abu sangat muda
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
         title: const Text(
           "Katalog Bunga",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Color(0xFFD63384),
+            fontFamily: 'PlayfairDisplay',
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.shopping_bag_outlined,
+              color: Color(0xFFD63384),
+            ),
+            onPressed: () => Navigator.pushNamed(context, '/keranjang'),
+          ),
+        ],
       ),
       body: GridView.builder(
         padding: const EdgeInsets.all(20),
@@ -81,12 +97,13 @@ class KatalogPage extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
+                                  // Bagian ini diganti dengan Whislist Page biar mengarah ke page Whislist
                                   builder: (context) => const KeranjangPage(),
                                 ),
                               );
                             },
                             icon: const Icon(
-                              Icons.shopping_cart_outlined,
+                              Icons.favorite_border,
                               color: Color(
                                 0xFFBC1A6F,
                               ), // Menyesuaikan tema warna KeranjangPage

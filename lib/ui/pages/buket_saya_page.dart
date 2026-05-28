@@ -6,9 +6,7 @@ class BuketSayaPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(
-        0xFFFDF8F9,
-      ), // Background pink soft transparan sesuai figma
+      backgroundColor: const Color(0xFFFDF8F9),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -33,7 +31,7 @@ class BuketSayaPage extends StatelessWidget {
           IconButton(
             icon: const Icon(
               Icons.shopping_bag_outlined,
-              color: Colors.black87,
+              color: Color(0xFFD63384),
             ),
             onPressed: () => Navigator.pushNamed(context, '/keranjang'),
           ),
@@ -44,6 +42,7 @@ class BuketSayaPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 10),
             const Text(
               "Buket Saya",
               style: TextStyle(
@@ -150,7 +149,7 @@ class BuketSayaPage extends StatelessWidget {
         ),
       ),
 
-      // --- TAMBAHAN NAVBAR SESUAI FIGMA ---
+      // --- TAMBAHAN NAVBAR  ---
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
         decoration: BoxDecoration(
