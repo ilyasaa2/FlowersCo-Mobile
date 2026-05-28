@@ -79,37 +79,37 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 23),
 
                       const Text(
                         "Flowers.co",
                         style: TextStyle(
                           color: AppColors.primaryPink,
-                          fontSize: 30,
+                          fontSize: 33,
                           fontWeight: FontWeight.bold,
                           fontStyle: FontStyle.italic,
+                        ),
+                      ),
+
+                      const SizedBox(height: 15),
+
+                      const Text(
+                        "Selamat datang kembali!",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Color.fromARGB(255, 76, 4, 47),
                         ),
                       ),
 
                       const SizedBox(height: 10),
 
                       const Text(
-                        "Selamat datang kembali!",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF1E3309),
-                        ),
-                      ),
-
-                      const SizedBox(height: 13),
-
-                      const Text(
                         "Silahkan masuk untuk melanjutkan\nperjalanan bunga Anda.",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 11,
+                          fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: Color.fromARGB(255, 178, 132, 150),
                           fontStyle: FontStyle.italic,
@@ -125,7 +125,8 @@ class _LoginPageState extends State<LoginPage> {
                         child: Text(
                           "Alamat Email",
                           style: TextStyle(
-                            fontSize: 11,
+                            color: Color(0xFF7C6670),
+                            fontSize: 12,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -180,7 +181,8 @@ class _LoginPageState extends State<LoginPage> {
                           const Text(
                             "Kata Sandi",
                             style: TextStyle(
-                              fontSize: 11,
+                              color: Color(0xFF7C6670),
+                              fontSize: 12,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
