@@ -18,6 +18,7 @@ import 'ui/pages/pusat_bantuan_page.dart';
 import 'ui/pages/kebijakan_privasi_page.dart';
 import 'ui/pages/tentang_kami_page.dart';
 import 'ui/pages/main_navigation_page.dart'; // 👈 1. IMPORT FILE NAVIGASI UTAMA KAMU DI SINI
+import 'ui/pages/selesai_pembayaran_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
         '/riwayat-pesanan': (context) => const RiwayatPesananPage(),
         '/buket-saya': (context) => const BuketSayaPage(),
         '/lacak-pesanan': (context) => const LacakPesananPage(),
+        '/selesai-pembayaran': (context) => const SelesaiPage(),
         '/keamanan': (context) => const KeamananPage(),
         '/alamat-pengiriman': (context) => const AlamatPengirimanPage(),
         '/notifikasi': (context) => const NotifikasiPage(),

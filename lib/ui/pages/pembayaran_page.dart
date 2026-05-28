@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'selesai_pembayaran_page.dart';
 
 class PembayaranPage extends StatefulWidget {
   const PembayaranPage({super.key});
@@ -61,15 +60,13 @@ class _PembayaranPageState extends State<PembayaranPage> {
     },
   ];
 
-  final TextEditingController _nameController = TextEditingController(
-    text: "John Doe",
-  );
-  final TextEditingController _phoneController = TextEditingController(
-    text: "+62 812 3456 7890",
-  );
-  final TextEditingController _addressController = TextEditingController(
-    text: "Jl. Bunga Melati No. 12, Jakarta Selatan",
-  );
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+
+  String? _nameError;
+  String? _phoneError;
+  String? _addressError;
 
   int _calculateSubtotal() {
     int total = 0;
@@ -92,6 +89,28 @@ class _PembayaranPageState extends State<PembayaranPage> {
       }
     }
     return "Rp $result";
+  }
+
+  bool _validateInput() {
+    bool isValid = true;
+
+    setState(() {
+      _nameError = _nameController.text.trim().isEmpty
+          ? 'Nama tidak boleh kosong'
+          : null;
+      _phoneError = _phoneController.text.trim().isEmpty
+          ? 'Nomor telepon tidak boleh kosong'
+          : null;
+      _addressError = _addressController.text.trim().isEmpty
+          ? 'Alamat tidak boleh kosong'
+          : null;
+
+      if (_nameError != null || _phoneError != null || _addressError != null) {
+        isValid = false;
+      }
+    });
+
+    return isValid;
   }
 
   @override
@@ -143,16 +162,19 @@ class _PembayaranPageState extends State<PembayaranPage> {
                   _buildInputField(
                     label: "Nama Lengkap",
                     controller: _nameController,
+                    errorText: _nameError,
                   ),
                   const SizedBox(height: 12),
                   _buildInputField(
                     label: "Nomor Telepon",
                     controller: _phoneController,
+                    errorText: _phoneError,
                   ),
                   const SizedBox(height: 12),
                   _buildInputField(
                     label: "Alamat Lengkap",
                     controller: _addressController,
+                    errorText: _addressError,
                     maxLines: 2,
                   ),
                 ],
@@ -357,7 +379,18 @@ class _PembayaranPageState extends State<PembayaranPage> {
                     height: 48,
                     child: ElevatedButton(
                       onPressed: () {
-                        _showKonfirmasiPembayaranDialog(context);
+                        if (_validateInput()) {
+                          _showKonfirmasiPembayaranDialog(context);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Mohon lengkapi semua data pengiriman.',
+                              ),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFBC1A6F),
@@ -450,28 +483,24 @@ class _PembayaranPageState extends State<PembayaranPage> {
               ),
             ],
           ),
-          content: SizedBox(
-            // 1. Kunci lebar dialog agar konsisten dan proporsional di semua HP 📱
-            width: MediaQuery.of(context).size.width * 0.85,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    "Apakah data pesanan Anda sudah benar?",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black54,
-                    ),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  "Apakah data pesanan Anda sudah benar?",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black54,
                   ),
-                  const SizedBox(height: 16),
+                ),
+                const SizedBox(height: 16),
 
-                  // 2. KOTAK DETAIL PUTIH (Sudah dibuang IntrinsicWidth-nya agar TIDAK MENCIUT) 🚀
-                  Container(
-                    width: double
-                        .infinity, // 👈 Memaksa kotak putih melebar penuh mengikuti dialog
+                // --- KOTAK DETAIL PUTIH (DINAMIS MENGIKUTI PANJANG TEKS) ---
+                IntrinsicWidth(
+                  child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -544,8 +573,8 @@ class _PembayaranPageState extends State<PembayaranPage> {
                       ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           actionsAlignment: MainAxisAlignment.end,
@@ -598,12 +627,11 @@ class _PembayaranPageState extends State<PembayaranPage> {
                           );
 
                           if (context.mounted) {
-                            Navigator.pushReplacement(
+                            Navigator.pop(context); // Tutup dialog
+                            Navigator.pushNamed(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) => const SelesaiPage(),
-                              ),
-                            );
+                              '/selesai-pembayaran',
+                            ); // Navigasi ke halaman selesai pembayaran
                           }
                         },
                   style: ElevatedButton.styleFrom(
@@ -742,6 +770,7 @@ class _PembayaranPageState extends State<PembayaranPage> {
   Widget _buildInputField({
     required String label,
     required TextEditingController controller,
+    String? errorText,
     int maxLines = 1,
   }) {
     return Column(
@@ -767,13 +796,20 @@ class _PembayaranPageState extends State<PembayaranPage> {
               horizontal: 12,
               vertical: 10,
             ),
+            errorText: errorText,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFFFCDCE2)),
+              borderSide: BorderSide(
+                color: errorText != null
+                    ? Colors.red.shade200
+                    : const Color(0xFFFCDCE2),
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFFBC1A6F)),
+              borderSide: BorderSide(
+                color: errorText != null ? Colors.red : const Color(0xFFBC1A6F),
+              ),
             ),
           ),
         ),
