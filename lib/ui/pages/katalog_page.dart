@@ -96,21 +96,37 @@ class KatalogPage extends StatelessWidget {
                               fontSize: 16,
                             ),
                           ),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const KeranjangPage(),
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/wishlist');
+                                },
+                                icon: const Icon(
+                                  Icons.favorite_border,
+                                  color: Color(0xFFBC1A6F),
                                 ),
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.favorite_border,
-                              color: Color(0xFFBC1A6F),
-                            ),
-                            constraints: const BoxConstraints(),
-                            padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                padding: EdgeInsets.zero,
+                              ),
+                              const SizedBox(width: 8),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const KeranjangPage(),
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(
+                                  Icons.shopping_bag_outlined,
+                                  color: Color(0xFFBC1A6F),
+                                ),
+                                constraints: const BoxConstraints(),
+                                padding: EdgeInsets.zero,
+                              ),
+                            ],
                           ),
                         ],
                       ),
