@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key}); 
+  const HomePage({super.key});
 
+  // WIDGET HELPER: Kartu Kesempatan
   Widget _buildOccasionCard(String title, String imageUrl) {
     return Container(
       decoration: BoxDecoration(
@@ -31,6 +32,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  // WIDGET HELPER: Item List Produk Vertikal
   Widget _buildVerticalProductCard({
     required String name,
     required String price,
@@ -147,270 +149,177 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(color: Color(0xFFD63384)),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // HERO BANNER
+          Container(
+            margin: const EdgeInsets.all(16),
+            width: double.infinity,
+            height: 280,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              image: const DecorationImage(
+                image: NetworkImage(
+                  'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=1000',
+                ),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.black.withOpacity(0.7),
+                    Colors.black.withOpacity(0.2),
+                  ],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                ),
+              ),
+              padding: const EdgeInsets.all(24),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.person,
-                      size: 35,
-                      color: Color(0xFFD63384),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
                   const Text(
-                    "Menu Flowers.co",
+                    "Katakan\ndengan\nBunga",
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      height: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    "Buket pilihan untuk setiap momen tulus, dirangkai dengan cinta dan dikirim dengan penuh perhatian.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.9),
+                      fontSize: 12,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Logic untuk pindah ke halaman katalog
+                      Navigator.pushNamed(context, '/katalog');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFBC1A6F),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 10,
+                      ),
+                    ),
+                    child: const Text(
+                      "Belanja Koleksi",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          // KATEGORI
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              "Belanja Berdasarkan\nKesempatan",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                height: 1.2,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: 1.0,
+              children: [
+                _buildOccasionCard(
+                  "Ulang Birthday",
+                  'https://images.unsplash.com/photo-1533616688419-b7a585564566?q=80&w=500',
+                ),
+                _buildOccasionCard(
+                  "Valentine",
+                  'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=500',
+                ),
+                _buildOccasionCard(
+                  "Pernikahan",
+                  'https://images.unsplash.com/photo-1523438885200-e635ba2c371e?q=80&w=500',
+                ),
+                _buildOccasionCard(
+                  "Belasungkawa",
+                  'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=500',
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 28),
+
+          // PRODUK PILIHAN
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Bunga Pilihan",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    "Lihat Semua",
+                    style: TextStyle(
+                      color: Color(0xFFBC1A6F),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            ListTile(
-              leading: const Icon(
-                Icons.home_outlined,
-                color: Color(0xFFD63384),
-              ),
-              title: const Text('Beranda'),
-              onTap: () {
-                Navigator.pop(context); 
-                Navigator.pushNamed(context, '/'); 
-              },
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.admin_panel_settings_outlined,
-                color: Color(0xFFD63384),
-              ),
-              title: const Text('Mode Admin'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.settings_outlined, color: Colors.grey),
-              title: const Text('Pengaturan Aplikasi'),
-              onTap: () => Navigator.pop(context),
-            ),
-          ],
-        ),
-      ),
+          ),
 
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: Builder(
-          builder: (internalContext) => IconButton(
-            icon: const Icon(Icons.menu, color: Color(0xFFBC1A6F)),
-            onPressed: () {
-              Scaffold.of(internalContext).openDrawer(); 
-            },
+          _buildVerticalProductCard(
+            name: "Mimpi Peony Merah Muda",
+            price: "Rp 650.000",
+            desc:
+                "Peony merah muda lembut dan dedaunan musiman dirangkai dalam satu keselarasan.",
+            imageUrl:
+                'https://images.unsplash.com/photo-1561181286-d3fee7d55364?q=80&w=600',
           ),
-        ),
-        
-        centerTitle: true,
-        title: const Text(
-          "Flowers.co",
-          style: TextStyle(
-            color: Color(0xFFBC1A6F),
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
+          _buildVerticalProductCard(
+            name: "Beri Tengah Midnight",
+            price: "Rp 1.250.000",
+            desc: "Mawar merah tua, dahlia burgundy, dan dedaunan subur.",
+            imageUrl:
+                'https://images.unsplash.com/photo-1525253086316-d0c936c814f8?q=80&w=600',
           ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.shopping_bag_outlined,
-              color: Color(0xFFD63384),
-            ),
-            onPressed: () => Navigator.pushNamed(context, '/keranjang'),
-          ),
+          const SizedBox(height: 20),
         ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // HERO BANNER
-            Container(
-              margin: const EdgeInsets.all(16),
-              width: double.infinity,
-              height: 280,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                image: const DecorationImage(
-                  image: NetworkImage(
-                    'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=1000',
-                  ),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.black.withOpacity(0.7),
-                      Colors.black.withOpacity(0.2),
-                    ],
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                  ),
-                ),
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Katakan\ndengan\nBunga",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        height: 1.2,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      "Buket pilihan untuk setiap momen tulus, dirangkai dengan cinta dan dikirim dengan penuh perhatian.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
-                        fontSize: 12,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFBC1A6F),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 10,
-                        ),
-                      ),
-                      child: const Text(
-                        "Belanja Koleksi",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 8),
-
-            // KATEGORI
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                "Belanja Berdasarkan\nKesempatan",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  height: 1.2,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: 1.0,
-                children: [
-                  _buildOccasionCard(
-                    "Ulang Birthday",
-                    'https://images.unsplash.com/photo-1533616688419-b7a585564566?q=80&w=500',
-                  ),
-                  _buildOccasionCard(
-                    "Valentine",
-                    'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=500',
-                  ),
-                  _buildOccasionCard(
-                    "Pernikahan",
-                    'https://images.unsplash.com/photo-1523438885200-e635ba2c371e?q=80&w=500',
-                  ),
-                  _buildOccasionCard(
-                    "Belasungkawa",
-                    'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=500',
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 28),
-
-            // PRODUK PILIHAN
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Bunga Pilihan",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      "Lihat Semua",
-                      style: TextStyle(
-                        color: Color(0xFFBC1A6F),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            _buildVerticalProductCard(
-              name: "Mimpi Peony Merah Muda",
-              price: "Rp 650.000",
-              desc:
-                  "Peony merah muda lembut dan dedaunan musiman dirangkai dalam satu keselarasan.",
-              imageUrl:
-                  'https://images.unsplash.com/photo-1561181286-d3fee7d55364?q=80&w=600',
-            ),
-            _buildVerticalProductCard(
-              name: "Beri Tengah Midnight",
-              price: "Rp 1.250.000",
-              desc: "Mawar merah tua, dahlia burgundy, dan dedaunan subur.",
-              imageUrl:
-                  'https://images.unsplash.com/photo-1525253086316-d0c936c814f8?q=80&w=600',
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
       ),
     );
   }

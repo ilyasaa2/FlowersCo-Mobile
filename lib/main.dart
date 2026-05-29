@@ -48,7 +48,6 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const MainNavigationPage(),
         '/katalog': (context) => const KatalogPage(),
         '/keranjang': (context) => const KeranjangPage(),
-        '/pembayaran': (context) => const PembayaranPage(),
         '/profil': (context) => const ProfilePage(),
         '/lengkapi-profil': (context) => const LengkapiProfilPage(),
         '/riwayat-pesanan': (context) => const RiwayatPesananPage(),
