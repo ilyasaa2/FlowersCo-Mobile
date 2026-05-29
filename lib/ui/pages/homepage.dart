@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'main_navigation_page.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final VoidCallback onNavigateToKatalog; // Definisi callback
+
+  const HomePage({super.key, required this.onNavigateToKatalog});
 
   // WIDGET HELPER: Kartu Kesempatan
   Widget _buildOccasionCard(String title, String imageUrl) {
@@ -205,8 +208,15 @@ class HomePage extends StatelessWidget {
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      // Logic untuk pindah ke halaman katalog
-                      Navigator.pushNamed(context, '/katalog');
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              MainNavigationPage(initialIndex: 1),
+                        ),
+                        (route) =>
+                            false, // Menghapus tumpukan navigasi sebelumnya
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFBC1A6F),

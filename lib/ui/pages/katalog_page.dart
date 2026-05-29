@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../components/custom_sidebar.dart';
 import '../../data/models/product_model.dart';
 import '../../data/models/app_state.dart';
 
@@ -32,7 +33,8 @@ class KatalogPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Sesuaikan warna background
+      backgroundColor: Colors.white,
+      bottomNavigationBar: const CustomSidebar(), // Sesuaikan warna background
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),

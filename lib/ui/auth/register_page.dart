@@ -342,7 +342,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             if (_formKey.currentState!.validate()) {
                               var response = await http.post(
                                 Uri.parse(
-                                  "http://127.0.0.1/FlowerscoMobile/register.php",
+                                  "http://127.0.0.1/api_flowers/register.php",
                                 ),
 
                                 body: {
