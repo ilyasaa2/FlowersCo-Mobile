@@ -1,5 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'detail_tanaman_page.dart';
+import 'detail_tip_page.dart';
+import 'main_navigation_page.dart';
+import 'keranjang_page.dart';
+import '../components/custom_sidebar.dart';
 
 // DATA TANAMAN
 class PlantData {
@@ -12,8 +17,7 @@ class PlantData {
       "difficulty": "Menengah",
       "light": "Tinggi",
       "water": "2 Hari",
-      "imageUrl":
-          "https://outerbloom.com/cdn/shop/articles/7_Arti_Bunga_Mawar_Sebagai_Kado_Valentine_1024x1024.jpg?v=1507889224",
+      "imageUrl": "assets/images/bunga_mawar.jpg",
       "description":
           "Mawar adalah ratu segala bunga. Di Indonesia, mawar tumbuh subur di dataran tinggi seperti Malang dan Bandung. Bunga ini melambangkan cinta dan keanggunan, menjadikannya pilihan utama untuk rangkaian buket.",
       "benefits": [
@@ -39,8 +43,7 @@ class PlantData {
       "difficulty": "Mudah",
       "light": "Sangat Tinggi",
       "water": "3 Hari",
-      "imageUrl":
-          "https://media.dekoruma.com/article/2020/12/29124328/sekumpulan-bunga-matahari-di-kebun-rumah.jpg?fit=300%2C200&ssl=1",
+      "imageUrl": "assets/images/bunga_matahari.jpg",
       "description":
           "Bunga matahari adalah simbol keceriaan dan optimisme. Batangnya yang tegak dan mahkotanya yang besar berwarna kuning cerah selalu berhasil mengangkat suasana hati. Sangat populer sebagai hadiah wisuda dan ulang tahun.",
       "benefits": [
@@ -60,41 +63,13 @@ class PlantData {
           "Bunga matahari muda selalu mengikuti arah matahari — fenomena ini disebut heliotropisme. Setelah dewasa, bunga menghadap ke timur secara permanen.",
     },
     {
-      "name": "Anggrek Bulan",
-      "latinName": "Phalaenopsis amabilis",
-      "category": "bunga_potong",
-      "difficulty": "Menengah",
-      "light": "Parsial",
-      "water": "5 Hari",
-      "imageUrl":
-          "https://media.istockphoto.com/id/1503679321/id/video/bunga-anggrek-phalaenopsis-mekar-di-musim-semi-dekorasi-keindahan-alam-anggrek-liar-langka.jpg?s=640x640&k=20&c=3Zuv-uTmsS0aBNpenEuxZInJ6I8xq1Eeh4yFHJhdTxY=",
-      "description":
-          "Anggrek Bulan adalah bunga nasional Indonesia dan kebanggaan nusantara. Kelopaknya yang putih bersih seperti sayap kupu-kupu menjadikannya salah satu bunga paling elegan di dunia. Tahan lama dan cocok untuk segala momen.",
-      "benefits": [
-        "Bunga nasional Indonesia yang membanggakan",
-        "Tahan lama hingga 2–3 bulan jika dirawat",
-        "Cocok untuk dekorasi pernikahan mewah",
-        "Nilai estetika sangat tinggi",
-      ],
-      "careSteps": [
-        "Jangan siram akar yang menempel di pot media — cukup semprotkan air",
-        "Letakkan di tempat dengan cahaya terang tidak langsung",
-        "Hindari angin AC langsung",
-        "Beri pupuk khusus anggrek sekali sebulan",
-        "Setelah berbunga, potong tangkai di ruas ke-2 dari bawah",
-      ],
-      "funFact":
-          "Anggrek Bulan (Phalaenopsis amabilis) adalah satu dari tiga bunga nasional Indonesia, bersama Melati dan Padma Raksasa.",
-    },
-    {
       "name": "Melati Putih",
       "latinName": "Jasminum sambac",
       "category": "bunga_potong",
       "difficulty": "Mudah",
       "light": "Tinggi",
       "water": "2 Hari",
-      "imageUrl":
-          "https://upload.wikimedia.org/wikipedia/commons/7/7f/Jasminum_sambac_2.jpg",
+      "imageUrl": "assets/images/bunga_melati.jpg",
       "description":
           "Melati adalah bunga puspa bangsa Indonesia yang mewakili kesucian dan ketulusan. Wanginya yang khas sangat familiar dalam budaya Jawa, sering digunakan dalam upacara pernikahan adat dan pembuatan teh melati.",
       "benefits": [
@@ -120,8 +95,7 @@ class PlantData {
       "difficulty": "Mudah",
       "light": "Sangat Tinggi",
       "water": "4 Hari",
-      "imageUrl":
-          "https://cdn-jpr.jawapos.com/images/18/2025/08/20/WhatsApp-Image-2025-08-15-at-184245-451176705.jpeg",
+      "imageUrl": "assets/images/bougenville.jpg",
       "description":
           "Bougenville adalah bunga tropis yang warna-warni dan sangat tahan panas. Di Indonesia, tanaman ini sangat populer sebagai tanaman hias pekarangan. Warnanya yang mencolok — ungu, merah, putih, oranye — menjadikannya dekorasi visual yang memukau.",
       "benefits": [
@@ -149,8 +123,7 @@ class PlantData {
       "difficulty": "Sangat Mudah",
       "light": "Rendah",
       "water": "5 Hari",
-      "imageUrl":
-          "https://upload.wikimedia.org/wikipedia/commons/8/8e/Epipremnum_aureum_1.jpg",
+      "imageUrl": "assets/images/sirih_gading.jpg",
       "description":
           "Sirih gading adalah tanaman hias paling populer di Indonesia karena nyaris tidak bisa mati! Daunnya yang hijau mengkilap berbentuk hati sangat dekoratif dan bisa merambat di mana saja. Cocok untuk pemula.",
       "benefits": [
@@ -176,8 +149,7 @@ class PlantData {
       "difficulty": "Sangat Mudah",
       "light": "Rendah",
       "water": "7 Hari",
-      "imageUrl":
-          "https://upload.wikimedia.org/wikipedia/commons/0/07/Aglaonema_commutatum2.jpg",
+      "imageUrl": "assets/images/sri_rejeki.jpg",
       "description":
           "Sri Rejeki atau Aglaonema adalah tanaman hias favorit masyarakat Indonesia yang dipercaya membawa keberuntungan. Motif daunnya yang unik — dari merah muda, hijau, hingga perak — menjadikannya dekorasi rumah yang cantik.",
       "benefits": [
@@ -197,41 +169,13 @@ class PlantData {
           "Indonesia adalah salah satu pusat pengembangan varietas Aglaonema baru. Para breeder lokal berhasil menciptakan ratusan varietas unik yang diminati kolektor dunia.",
     },
     {
-      "name": "Kaktus",
-      "latinName": "Cactaceae",
-      "category": "tanaman_indoor",
-      "difficulty": "Sangat Mudah",
-      "light": "Sangat Tinggi",
-      "water": "14 Hari",
-      "imageUrl":
-          "https://upload.wikimedia.org/wikipedia/commons/8/8f/Cactus.jpg",
-      "description":
-          "Kaktus adalah tanaman paling tangguh yang bisa kamu rawat. Berasal dari gurun, kaktus menyimpan air di batangnya sehingga bisa bertahan lama tanpa disiram. Sempurna untuk kamu yang sering lupa menyiram tanaman!",
-      "benefits": [
-        "Tidak butuh banyak perhatian dan perawatan",
-        "Duri unik memberikan tampilan estetik industrial",
-        "Bisa hidup bertahun-tahun tanpa banyak perawatan",
-        "Cocok untuk meja kerja dan ruang sempit",
-      ],
-      "careSteps": [
-        "Siram hanya setiap 2 minggu, lebih sedikit di musim hujan",
-        "Letakkan di dekat jendela yang mendapat sinar matahari",
-        "Gunakan pot dengan lubang drainase yang baik",
-        "Gunakan media tanam khusus kaktus (pasir + tanah)",
-        "Jangan biarkan air menggenang di pot",
-      ],
-      "funFact":
-          "Kaktus tidak memiliki daun sejati — duri-durinya sebenarnya adalah daun yang telah berevolusi untuk mengurangi penguapan air di gurun.",
-    },
-    {
       "name": "Lidah Mertua",
       "latinName": "Sansevieria trifasciata",
       "category": "tanaman_indoor",
       "difficulty": "Sangat Mudah",
       "light": "Rendah",
       "water": "10 Hari",
-      "imageUrl":
-          "https://upload.wikimedia.org/wikipedia/commons/f/fb/Sansevieria_trifasciata.jpg",
+      "imageUrl": "assets/images/lidah_mertua.jpg",
       "description":
           "Lidah Mertua atau Snake Plant adalah tanaman yang hampir mustahil untuk dimatikan. Daunnya yang tegak dan bermotif indah sangat dekoratif. Uniknya, tanaman ini menghasilkan oksigen di malam hari — sempurna diletakkan di kamar tidur!",
       "benefits": [
@@ -257,8 +201,7 @@ class PlantData {
       "difficulty": "Sangat Mudah",
       "light": "Tinggi",
       "water": "10 Hari",
-      "imageUrl":
-          "https://upload.wikimedia.org/wikipedia/commons/5/5c/Aloe_vera_2.jpg",
+      "imageUrl": "assets/images/lidah_buaya.jpg",
       "description":
           "Lidah Buaya adalah tanaman ajaib yang sudah digunakan sejak ribuan tahun lalu. Gel di dalam daunnya mengandung ratusan senyawa aktif yang bermanfaat untuk kesehatan kulit, rambut, dan pencernaan. Wajib ada di setiap rumah!",
       "benefits": [
@@ -285,8 +228,7 @@ class PlantData {
       "difficulty": "Mudah",
       "light": "Parsial",
       "water": "4 Hari",
-      "imageUrl":
-          "https://upload.wikimedia.org/wikipedia/commons/3/3f/Monstera_deliciosa2.jpg",
+      "imageUrl": "assets/images/monstera.jpg",
       "description":
           "Monstera adalah ikon tanaman hias modern. Daunnya yang besar berlubang-lubang unik menjadikannya sangat ikonik dalam dunia dekorasi interior. Di alam liar, lubang pada daun membantu angin melewati dan mengurangi kerusakan saat hujan lebat.",
       "benefits": [
@@ -306,42 +248,13 @@ class PlantData {
           "Lubang pada daun Monstera bukan cacat — ini adalah adaptasi evolusioner! Lubang memungkinkan lebih banyak cahaya mencapai daun di bawahnya di hutan hujan tropis yang rimbun.",
     },
     {
-      "name": "Jahe Merah",
-      "latinName": "Zingiber officinale var. rubrum",
-      "category": "tanaman_indoor",
-      "difficulty": "Mudah",
-      "light": "Parsial",
-      "water": "3 Hari",
-      "imageUrl":
-          "https://upload.wikimedia.org/wikipedia/commons/5/5c/Zingiber_officinale0.jpg",
-      "description":
-          "Jahe Merah adalah rempah ajaib asli Indonesia yang memiliki khasiat kesehatan luar biasa. Kandungan gingerol dan shogaol di dalamnya jauh lebih tinggi dari jahe biasa, menjadikannya pilihan utama untuk minuman herbal dan obat tradisional.",
-      "benefits": [
-        "Meningkatkan imunitas tubuh secara alami",
-        "Menghangatkan tubuh dan meredakan masuk angin",
-        "Anti-inflamasi kuat untuk nyeri sendi",
-        "Membantu mengatasi mual dan gangguan pencernaan",
-        "Bisa ditanam sendiri di pot di rumah",
-      ],
-      "careSteps": [
-        "Tanam rimpang jahe merah di pot dengan media tanam subur",
-        "Siram setiap 2–3 hari, jaga tanah tetap lembap tapi tidak tergenang",
-        "Letakkan di tempat dengan cahaya tidak langsung",
-        "Beri pupuk organik sebulan sekali",
-        "Panen setelah 8–10 bulan atau saat daun mulai menguning",
-      ],
-      "funFact":
-          "Jahe Merah mengandung gingerol 3x lebih tinggi dibanding jahe biasa. Rempah ini sudah digunakan dalam pengobatan Ayurveda dan jamu Jawa selama lebih dari 2.000 tahun.",
-    },
-    {
       "name": "Kunyit",
       "latinName": "Curcuma longa",
       "category": "tanaman_indoor",
       "difficulty": "Mudah",
       "light": "Parsial",
       "water": "3 Hari",
-      "imageUrl":
-          "https://upload.wikimedia.org/wikipedia/commons/7/7b/Curcuma_longa_roots.jpg",
+      "imageUrl": "assets/images/kunyit.jpg",
       "description":
           "Kunyit adalah rempah emas Indonesia yang terkenal di seluruh dunia. Warna kuning cerahnya berasal dari kurkumin, senyawa anti-inflamasi terkuat yang ada di alam. Kunyit adalah bahan utama jamu kunyit asam yang sangat populer di Jawa.",
       "benefits": [
@@ -368,8 +281,7 @@ class PlantData {
       "difficulty": "Sangat Mudah",
       "light": "Tinggi",
       "water": "4 Hari",
-      "imageUrl":
-          "https://upload.wikimedia.org/wikipedia/commons/1/1c/Cymbopogon_citratus.jpg",
+      "imageUrl": "assets/images/serai.jpg",
       "description":
           "Serai atau sereh adalah tanaman aromatik serbaguna asli Asia Tenggara. Aromanya yang segar dan khas digunakan dalam masakan Indonesia, aromaterapi, hingga pengusir nyamuk alami. Sangat mudah tumbuh dan bisa dipanen berulang kali.",
       "benefits": [
@@ -391,7 +303,6 @@ class PlantData {
     },
   ];
 
-  // Tips Hari Ini — dipilih secara random per sesi login
   static final List<Map<String, dynamic>> dailyTips = [
     {
       "title": "Rahasia Mawar\nTetap Segar\nSepanjang Minggu",
@@ -689,18 +600,35 @@ class _PerpustakaanTanamanPageState extends State<PerpustakaanTanamanPage> {
     });
   }
 
+  // PERBAIKAN: Helper untuk navigasi navbar yang benar
+  void _onNavbarTap(int index) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (_) => MainNavigationPage(initialIndex: index),
+      ),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final filtered = _filteredPlants;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
+      drawer: const CustomSidebar(),
+
+      // PERBAIKAN: AppBar sendiri karena halaman ini di-push via Navigator,
+      // bukan bagian dari IndexedStack di MainNavigationPage
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFFBC1A6F)),
-          onPressed: () => Navigator.pop(context),
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu, color: Color(0xFFBC1A6F)),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
         ),
         centerTitle: true,
         title: const Text(
@@ -718,10 +646,54 @@ class _PerpustakaanTanamanPageState extends State<PerpustakaanTanamanPage> {
               Icons.shopping_bag_outlined,
               color: Color(0xFFBC1A6F),
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const KeranjangPage()),
+              );
+            },
           ),
         ],
       ),
+
+      // PERBAIKAN: currentIndex: 1 (Katalog) sudah benar karena halaman ini
+      // bagian dari alur Katalog. onTap menggunakan _onNavbarTap agar
+      // klik Beranda (index 0) benar-benar kembali ke Beranda.
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: const Color(0xFFBC1A6F),
+        unselectedItemColor: Colors.black45,
+        currentIndex: 1,
+        selectedLabelStyle: const TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+        ),
+        unselectedLabelStyle: const TextStyle(fontSize: 11),
+        onTap: _onNavbarTap,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: 'Beranda',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_florist_outlined),
+            activeIcon: Icon(Icons.local_florist),
+            label: 'Katalog',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border),
+            activeIcon: Icon(Icons.favorite),
+            label: 'Wishlist',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            activeIcon: Icon(Icons.person),
+            label: 'Akun',
+          ),
+        ],
+      ),
+
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -826,7 +798,7 @@ class _PerpustakaanTanamanPageState extends State<PerpustakaanTanamanPage> {
 
             const SizedBox(height: 12),
 
-            // --- TIPS HARI INI (hanya tab Semua & tidak sedang search) ---
+            // --- TIPS HARI INI ---
             if (_selectedTab == 0 && _searchQuery.isEmpty) ...[
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -904,10 +876,11 @@ class _PerpustakaanTanamanPageState extends State<PerpustakaanTanamanPage> {
                         children: [
                           OutlinedButton(
                             onPressed: () {
-                              Navigator.pushNamed(
+                              Navigator.push(
                                 context,
-                                '/detail-tip',
-                                arguments: _todayTip,
+                                MaterialPageRoute(
+                                  builder: (_) => DetailTipPage(tip: _todayTip),
+                                ),
                               );
                             },
                             style: OutlinedButton.styleFrom(
@@ -1036,14 +1009,9 @@ class _PerpustakaanTanamanPageState extends State<PerpustakaanTanamanPage> {
 
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(
+        Navigator.push(
           context,
-          '/detail-tanaman',
-          arguments: {
-            'plant': plant,
-            'isFavorite': isFav,
-            'onFavoriteToggle': () => _toggleFavorite(plant["name"]),
-          },
+          MaterialPageRoute(builder: (_) => DetailTanamanPage(plant: plant)),
         );
       },
       child: Container(
@@ -1068,20 +1036,9 @@ class _PerpustakaanTanamanPageState extends State<PerpustakaanTanamanPage> {
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(16),
                   ),
-                  child: Image.network(
-                    plant["imageUrl"],
-                    width: double.infinity,
-                    height: 180,
-                    fit: BoxFit.cover,
-                    errorBuilder: (c, e, s) => Container(
-                      height: 180,
-                      color: Colors.pink.shade50,
-                      child: const Icon(
-                        Icons.local_florist,
-                        size: 50,
-                        color: Color(0xFFBC1A6F),
-                      ),
-                    ),
+                  child: _buildPlantImage(
+                    plant["imageUrl"] ?? "assets/images/bunga_mawar.jpg",
+                    180,
                   ),
                 ),
                 Positioned(
@@ -1099,7 +1056,7 @@ class _PerpustakaanTanamanPageState extends State<PerpustakaanTanamanPage> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      isIndoor ? " Indoor" : " Bunga Potong",
+                      isIndoor ? "🌿 Indoor" : "🌸 Bunga Potong",
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 10,
@@ -1196,6 +1153,24 @@ class _PerpustakaanTanamanPageState extends State<PerpustakaanTanamanPage> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPlantImage(String imageUrl, double height) {
+    return Image.asset(
+      imageUrl,
+      width: double.infinity,
+      height: height,
+      fit: BoxFit.cover,
+      errorBuilder: (c, e, s) => Container(
+        height: height,
+        color: const Color(0xFFFCE4EC),
+        child: const Icon(
+          Icons.local_florist,
+          size: 50,
+          color: Color(0xFFBC1A6F),
         ),
       ),
     );

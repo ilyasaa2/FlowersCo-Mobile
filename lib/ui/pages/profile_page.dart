@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../core/constants.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -77,41 +76,6 @@ class ProfilePage extends StatelessWidget {
         ),
       ),
 
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(
-              Icons.menu, // Ikon garis tiga (Hamburger Menu)
-              color: Color(0xFFD63384),
-            ),
-            onPressed: () {
-              Scaffold.of(context).openDrawer(); // Membuka Drawer
-            },
-          ),
-        ),
-
-        title: const Text(
-          "Flowers.co",
-          style: TextStyle(
-            color: Color(0xFFD63384),
-            fontFamily: 'PlayfairDisplay',
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.shopping_bag_outlined,
-              color: Color(0xFFD63384),
-            ),
-            onPressed: () => Navigator.pushNamed(context, '/keranjang'),
-          ),
-        ],
-      ),
       body: SingleChildScrollView(
         child: Column(
           children: [

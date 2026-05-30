@@ -3,6 +3,7 @@ import 'homepage.dart';
 import 'katalog_page.dart';
 import 'profile_page.dart';
 import 'wishlist_page.dart';
+import '../components/custom_sidebar.dart';
 
 class MainNavigationPage extends StatefulWidget {
   final int initialIndex;
@@ -22,18 +23,56 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     _currentIndex = widget.initialIndex;
   }
 
-  // Daftar halaman utama aplikasi kamu dikumpulkan di sini
-  final List<Widget> _pages = [
-    const HomePage(), // Index 0
-    const KatalogPage(), // Index 1
-    const WishlistPage(), // Index 2
-    const ProfilePage(), // Index 3: Tombol keempat mengarah ke Profil Kamu! 👈
+  // Daftar halaman utama aplikasi
+  List<Widget> get _pages => [
+    HomePage(
+      onNavigateToKatalog: () {
+        setState(() {
+          _currentIndex = 1;
+        });
+      },
+    ),
+    const KatalogPage(),
+    const WishlistPage(),
+    const ProfilePage(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_currentIndex], // Menampilkan halaman aktif
+      // 1. Tambahkan AppBar global agar tombol menu tiga garis otomatis muncul di semua sub-halaman
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
+        iconTheme: const IconThemeData(
+          color: Colors.black87,
+        ), // Mengubah warna ikon menu menjadi hitam/gelap
+        title: const Text(
+          'Flowers.co',
+          style: TextStyle(
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFFBC1A6F), // Warna pink khas FlowersCo kamu
+            fontSize: 22,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.shopping_bag_outlined,
+              color: Color(0xFFBC1A6F),
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, '/keranjang');
+            },
+          ),
+        ],
+      ),
+
+      drawer: const CustomSidebar(),
+
+      body: IndexedStack(index: _currentIndex, children: _pages),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         selectedItemColor: const Color(0xFFBC1A6F),

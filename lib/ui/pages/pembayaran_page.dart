@@ -1,33 +1,16 @@
 import 'package:flutter/material.dart';
 
 class PembayaranPage extends StatefulWidget {
-  const PembayaranPage({super.key});
+  // TAMBAHAN: Menerima data dari halaman sebelumnya
+  final List<Map<String, dynamic>> cartItems;
+
+  const PembayaranPage({super.key, required this.cartItems});
 
   @override
   State<PembayaranPage> createState() => _PembayaranPageState();
 }
 
 class _PembayaranPageState extends State<PembayaranPage> {
-  // Simulasi data ringkasan belanja dari halaman sebelumnya
-  final List<Map<String, dynamic>> _cartItems = [
-    {
-      "id": 1,
-      "name": "Rose Bouquet \"Eternal Love\"",
-      "subtitle": "Warna: Deep Red | Qty: 1",
-      "price": 450000,
-      "imageUrl":
-          "https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=200",
-    },
-    {
-      "id": 2,
-      "name": "Peony Luxe Box",
-      "subtitle": "Tipe: Signature | Qty: 1",
-      "price": 850000,
-      "imageUrl":
-          "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=200",
-    },
-  ];
-
   String _selectedDelivery = "Express";
   final int _expressPrice = 50000;
   final int _standardPrice = 25000;
@@ -70,8 +53,8 @@ class _PembayaranPageState extends State<PembayaranPage> {
 
   int _calculateSubtotal() {
     int total = 0;
-    for (var item in _cartItems) {
-      total += item["price"] as int;
+    for (var item in widget.cartItems) {
+      total += (item["price"] as num).toInt();
     }
     return total;
   }
@@ -292,9 +275,9 @@ class _PembayaranPageState extends State<PembayaranPage> {
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: _cartItems.length,
+                    itemCount: widget.cartItems.length,
                     itemBuilder: (context, index) {
-                      final item = _cartItems[index];
+                      final item = widget.cartItems[index];
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 12.0),
                         child: Row(

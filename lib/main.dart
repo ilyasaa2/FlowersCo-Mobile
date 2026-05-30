@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'ui/auth/login_page.dart';
 import 'ui/auth/register_page.dart';
 import 'ui/auth/forgot_password_page.dart';
-import 'ui/pages/homepage.dart';
 import 'ui/pages/katalog_page.dart';
 import 'ui/pages/keranjang_page.dart';
-import 'ui/pages/pembayaran_page.dart';
 import 'ui/pages/profile_page.dart';
 import 'ui/pages/lengkapi_profil_page.dart';
 import 'ui/pages/riwayat_pesanan_page.dart';
@@ -24,6 +22,7 @@ import 'ui/pages/pembayaran_berhasil_page.dart';
 import 'ui/pages/detail_tanaman_page.dart';
 import 'ui/pages/detail_tip_page.dart';
 import 'ui/pages/selesai_pembayaran_page.dart';
+import 'ui/pages/wishlist_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,7 +38,7 @@ class MyApp extends StatelessWidget {
       title: 'Flowers.co',
       theme: ThemeData(useMaterial3: true, primarySwatch: Colors.pink),
 
-      initialRoute: '/',
+      initialRoute: '/home',
 
       routes: {
         '/': (context) => const LoginPage(),
@@ -48,7 +47,6 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const MainNavigationPage(),
         '/katalog': (context) => const KatalogPage(),
         '/keranjang': (context) => const KeranjangPage(),
-        '/pembayaran': (context) => const PembayaranPage(),
         '/profil': (context) => const ProfilePage(),
         '/lengkapi-profil': (context) => const LengkapiProfilPage(),
         '/riwayat-pesanan': (context) => const RiwayatPesananPage(),
@@ -64,24 +62,21 @@ class MyApp extends StatelessWidget {
         '/panduan-perawatan': (context) => const PanduanPerawatanPage(),
         '/perpustakaan-tanaman': (context) => const PerpustakaanTanamanPage(),
         '/pembayaran-berhasil': (context) => const PembayaranBerhasilPage(),
+        '/wishlist': (context) => const WishlistPage(),
 
+        // Detail tanaman — cukup kirim plant saja
         '/detail-tanaman': (context) {
           final args =
               ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>;
-
-          return DetailTanamanPage(
-            plant: args['plant'],
-            isFavorite: args['isFavorite'],
-            onFavoriteToggle: args['onFavoriteToggle'],
-          );
+          return DetailTanamanPage(plant: args['plant']);
         },
 
+        // Detail tip
         '/detail-tip': (context) {
           final tip =
               ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>;
-
           return DetailTipPage(tip: tip);
         },
       },
