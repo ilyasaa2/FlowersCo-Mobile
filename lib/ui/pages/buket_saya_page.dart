@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 
-class BuketSayaPage extends StatelessWidget {
+class BuketSayaPage extends StatefulWidget {
   const BuketSayaPage({super.key});
+
+  @override
+  State<BuketSayaPage> createState() => _BuketSayaPageState();
+}
+
+class _BuketSayaPageState extends State<BuketSayaPage> {
+  // Menyimpan status filter yang dipilih saat ini
+  String _selectedFilter = "Semua";
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +18,6 @@ class BuketSayaPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        // 🌟 MENGGANTI SIDEBAR MENJADI TOMBOL KEMBALI
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black87),
           onPressed: () {
@@ -67,89 +74,104 @@ class BuketSayaPage extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  _buildFilterChip("Semua", true),
-                  _buildFilterChip("Pesanan Aktif", false),
-                  _buildFilterChip("Terdahulu", false),
-                  _buildFilterChip("Tersimpan", false),
+                  _buildFilterChip("Semua"),
+                  _buildFilterChip("Pesanan Aktif"),
+                  _buildFilterChip("Terdahulu"),
+                  _buildFilterChip("Tersimpan"),
                 ],
               ),
             ),
             const SizedBox(height: 25),
 
-            // --- LIST KARTU SESUAI FIGMA ---
-            // 1. Midnight Rose
-            _buildBouquetCard(
-              context: context,
-              title: "Midnight Rose",
-              description:
-                  "Komposisi dramatis dan elegan dari mawar merah tua yang lembut dan dedaunan yang kontras.",
-              badgeText: "Dalam Perjalanan",
-              badgeColor: const Color(0xFFFFEBEE),
-              badgeTextColor: Colors.red.shade700,
-              infoLabel: "Perkiraan Pengiriman",
-              infoValue: "Besok, 14:00",
-              buttonText: "Lacak Pesanan",
-              isPrimaryButton: true,
-              hasHeartIcon: false,
-              onButtonTap: () => Navigator.pushNamed(context, '/lacak-pesanan'),
-            ),
-            const SizedBox(height: 20),
+            // --- LIST KARTU SESUAI FIGMA & FILTER YANG DIPILIH ---
 
-            // 2. Summer Serenity
-            _buildBouquetCard(
-              context: context,
-              title: "Summer Serenity",
-              description: "Terkirim pada 12 Agt 2023",
-              badgeText: "Terkirim",
-              badgeColor: const Color(0xFFF1F3F5),
-              badgeTextColor: Colors.black54,
-              infoLabel: "",
-              infoValue: "",
-              buttonText: "Pesan Lagi",
-              isPrimaryButton: false,
-              hasHeartIcon: true,
-              onButtonTap: () {},
-            ),
-            const SizedBox(height: 20),
+            // 1. Midnight Rose (Masuk kategori 'Semua' dan 'Pesanan Aktif')
+            if (_selectedFilter == "Semua" ||
+                _selectedFilter == "Pesanan Aktif") ...[
+              _buildBouquetCard(
+                context: context,
+                title: "Midnight Rose",
+                description:
+                    "Komposisi dramatis dan elegan dari mawar merah tua yang lembut dan dedaunan yang kontras.",
+                badgeText: "Dalam Perjalanan",
+                badgeColor: const Color(0xFFFFEBEE),
+                badgeTextColor: Colors.red.shade700,
+                infoLabel: "Perkiraan Pengiriman",
+                infoValue: "Besok, 14:00",
+                buttonText: "Lacak Pesanan",
+                isPrimaryButton: true,
+                hasHeartIcon: false,
+                onButtonTap: () =>
+                    Navigator.pushNamed(context, '/lacak-pesanan'),
+              ),
+              const SizedBox(height: 20),
+            ],
 
-            // 3. Wild Berry
-            _buildBouquetCard(
-              context: context,
-              title: "Wild Berry",
-              description:
-                  "Dahlia mencolok dan aksen lavender untuk karya yang memukau.",
-              badgeText: "Ide Tersimpan",
-              badgeColor: const Color(0xFFF1F3F5),
-              badgeTextColor: Colors.black54,
-              infoLabel: "",
-              infoValue: "",
-              buttonText: "Lihat Detail",
-              isPrimaryButton: false,
-              hasHeartIcon: false,
-              onButtonTap: () {},
-            ),
-            const SizedBox(height: 20),
+            // 2. Summer Serenity (Masuk kategori 'Semua' dan 'Terdahulu')
+            if (_selectedFilter == "Semua" ||
+                _selectedFilter == "Terdahulu") ...[
+              _buildBouquetCard(
+                context: context,
+                title: "Summer Serenity",
+                description: "Terkirim pada 12 Agt 2023",
+                badgeText: "Terkirim",
+                badgeColor: const Color(0xFFF1F3F5),
+                badgeTextColor: Colors.black54,
+                infoLabel: "",
+                infoValue: "",
+                buttonText: "Pesan Lagi",
+                isPrimaryButton: false,
+                hasHeartIcon: true,
+                onButtonTap: () {},
+              ),
+              const SizedBox(height: 20),
+            ],
 
-            // 4. Cloud Nine
-            _buildBouquetCard(
-              context: context,
-              title: "Cloud Nine",
-              description: "Terkirim pada 04 Mei 2023",
-              badgeText: "Terkirim",
-              badgeColor: const Color(0xFFF1F3F5),
-              badgeTextColor: Colors.black54,
-              infoLabel: "",
-              infoValue: "",
-              buttonText: "Pesan Lagi",
-              isPrimaryButton: false,
-              hasHeartIcon: false,
-              onButtonTap: () {},
-            ),
+            // 3. Wild Berry (Masuk kategori 'Semua' dan 'Tersimpan')
+            if (_selectedFilter == "Semua" ||
+                _selectedFilter == "Tersimpan") ...[
+              _buildBouquetCard(
+                context: context,
+                title: "Wild Berry",
+                description:
+                    "Dahlia mencolok dan aksen lavender untuk karya yang memukau.",
+                badgeText: "Ide Tersimpan",
+                badgeColor: const Color(0xFFF1F3F5),
+                badgeTextColor: Colors.black54,
+                infoLabel: "",
+                infoValue: "",
+                buttonText: "Lihat Detail",
+                isPrimaryButton: false,
+                hasHeartIcon: false,
+                onButtonTap: () {},
+              ),
+              const SizedBox(height: 20),
+            ],
+
+            // 4. Cloud Nine (Masuk kategori 'Semua' dan 'Terdahulu')
+            if (_selectedFilter == "Semua" ||
+                _selectedFilter == "Terdahulu") ...[
+              _buildBouquetCard(
+                context: context,
+                title: "Cloud Nine",
+                description: "Terkirim pada 04 Mei 2023",
+                badgeText: "Terkirim",
+                badgeColor: const Color(0xFFF1F3F5),
+                badgeTextColor: Colors.black54,
+                infoLabel: "",
+                infoValue: "",
+                buttonText: "Pesan Lagi",
+                isPrimaryButton: false,
+                hasHeartIcon: false,
+                onButtonTap: () {},
+              ),
+              const SizedBox(height: 20),
+            ],
           ],
         ),
       ),
 
-      // --- TAMBAHAN NAVBAR  ---
+      // --- NAVBAR BOTTOM ---
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
         decoration: BoxDecoration(
@@ -175,7 +197,6 @@ class BuketSayaPage extends StatelessWidget {
               _buildNavItem(Icons.favorite_border, "Wishlist", false, () {
                 Navigator.pushReplacementNamed(context, '/wishlist');
               }),
-              // 🌟 HIGHLIGHT DIHILANGKAN: Mengubah isActive dari true menjadi false
               _buildNavItem(Icons.person_outline, "Akun", false, () {
                 Navigator.pushReplacementNamed(context, '/profile');
               }),
@@ -228,22 +249,30 @@ class BuketSayaPage extends StatelessWidget {
     );
   }
 
-  Widget _buildFilterChip(String label, bool isSelected) {
-    return Container(
-      margin: const EdgeInsets.only(right: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: isSelected
-            ? const Color(0xFFBC1A6F)
-            : const Color(0xFFF8D7DA).withOpacity(0.5),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: isSelected ? Colors.white : const Color(0xFFBC1A6F),
-          fontWeight: FontWeight.w500,
-          fontSize: 13,
+  Widget _buildFilterChip(String label) {
+    final isSelected = _selectedFilter == label;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedFilter = label; // Mengubah filter aktif
+        });
+      },
+      child: Container(
+        margin: const EdgeInsets.only(right: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? const Color(0xFFBC1A6F)
+              : const Color(0xFFF8D7DA).withOpacity(0.5),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.white : const Color(0xFFBC1A6F),
+            fontWeight: FontWeight.w500,
+            fontSize: 13,
+          ),
         ),
       ),
     );

@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
+import 'main_navigation_page.dart';
 
 enum _SectionType { heading, paragraph }
 
 class _TipSection {
   final _SectionType type;
   final String text;
-
   _TipSection({required this.type, required this.text});
 }
 
 class DetailTipPage extends StatelessWidget {
   final Map<String, dynamic> tip;
-
   const DetailTipPage({super.key, required this.tip});
 
   @override
   Widget build(BuildContext context) {
-    // Proteksi jika properti title bernilai null
     final String title = (tip["title"] ?? "Tips").toString().replaceAll(
       "\n",
       " ",
@@ -26,6 +24,48 @@ class DetailTipPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: const Color(0xFFBC1A6F),
+        unselectedItemColor: Colors.black45,
+        currentIndex: 1,
+        selectedLabelStyle: const TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+        ),
+        unselectedLabelStyle: const TextStyle(fontSize: 11),
+        onTap: (index) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (_) => MainNavigationPage(initialIndex: index),
+            ),
+            (route) => false,
+          );
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: 'Beranda',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_florist_outlined),
+            activeIcon: Icon(Icons.local_florist),
+            label: 'Katalog',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border),
+            activeIcon: Icon(Icons.favorite),
+            label: 'Wishlist',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            activeIcon: Icon(Icons.person),
+            label: 'Akun',
+          ),
+        ],
+      ),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -49,7 +89,7 @@ class DetailTipPage extends StatelessWidget {
               Icons.shopping_bag_outlined,
               color: Color(0xFFBC1A6F),
             ),
-            onPressed: () {},
+            onPressed: () => Navigator.pushNamed(context, '/keranjang'),
           ),
         ],
       ),
@@ -57,7 +97,7 @@ class DetailTipPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // --- HEADER BANNER ---
+            // Header Banner
             Container(
               width: double.infinity,
               decoration: const BoxDecoration(color: Color(0xFFBC1A6F)),
@@ -65,7 +105,6 @@ class DetailTipPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Badge kategori + waktu baca
                   Row(
                     children: [
                       Container(
@@ -119,7 +158,6 @@ class DetailTipPage extends StatelessWidget {
               ),
             ),
 
-            // Curved bottom efek
             Container(
               height: 24,
               decoration: const BoxDecoration(
@@ -128,7 +166,6 @@ class DetailTipPage extends StatelessWidget {
               ),
             ),
 
-            // --- ARTIKEL KONTEN ---
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               child: Column(
@@ -137,7 +174,6 @@ class DetailTipPage extends StatelessWidget {
               ),
             ),
 
-            // --- TOMBOL KEMBALI ---
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 40),
               child: SizedBox(
@@ -172,25 +208,23 @@ class DetailTipPage extends StatelessWidget {
     );
   }
 
-  // Parse konten dari format markdown-like sederhana
   List<_TipSection> _parseContent(String raw) {
     final lines = raw.trim().split("\n");
     final sections = <_TipSection>[];
-
     for (final line in lines) {
       final trimmed = line.trim();
-      if (trimmed.isEmpty) {
-        continue;
-      } else if (trimmed.startsWith("**") && trimmed.endsWith("**")) {
-        // Heading (Menghapus tanda bintang **)
-        final heading = trimmed.replaceAll("**", "");
-        sections.add(_TipSection(type: _SectionType.heading, text: heading));
+      if (trimmed.isEmpty) continue;
+      if (trimmed.startsWith("**") && trimmed.endsWith("**")) {
+        sections.add(
+          _TipSection(
+            type: _SectionType.heading,
+            text: trimmed.replaceAll("**", ""),
+          ),
+        );
       } else {
-        // Paragraf biasa
         sections.add(_TipSection(type: _SectionType.paragraph, text: trimmed));
       }
     }
-
     return sections;
   }
 

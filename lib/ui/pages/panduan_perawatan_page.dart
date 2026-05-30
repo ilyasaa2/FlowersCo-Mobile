@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'main_navigation_page.dart';
+import '../components/custom_sidebar.dart';
 
 class PanduanPerawatanPage extends StatelessWidget {
   const PanduanPerawatanPage({super.key});
@@ -7,12 +9,57 @@ class PanduanPerawatanPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      drawer: const CustomSidebar(),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: const Color(0xFFBC1A6F),
+        unselectedItemColor: Colors.black45,
+        currentIndex: 0,
+        selectedLabelStyle: const TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+        ),
+        unselectedLabelStyle: const TextStyle(fontSize: 11),
+        onTap: (index) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (_) => MainNavigationPage(initialIndex: index),
+            ),
+            (route) => false,
+          );
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: 'Beranda',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_florist_outlined),
+            activeIcon: Icon(Icons.local_florist),
+            label: 'Katalog',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border),
+            activeIcon: Icon(Icons.favorite),
+            label: 'Wishlist',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            activeIcon: Icon(Icons.person),
+            label: 'Akun',
+          ),
+        ],
+      ),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Color(0xFFBC1A6F)),
-          onPressed: () {},
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu, color: Color(0xFFBC1A6F)),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
         ),
         centerTitle: true,
         title: const Text(
@@ -30,7 +77,7 @@ class PanduanPerawatanPage extends StatelessWidget {
               Icons.shopping_bag_outlined,
               color: Color(0xFFBC1A6F),
             ),
-            onPressed: () {},
+            onPressed: () => Navigator.pushNamed(context, '/keranjang'),
           ),
         ],
       ),
@@ -38,7 +85,6 @@ class PanduanPerawatanPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // --- HEADER SECTION ---
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
               child: Column(
@@ -75,16 +121,13 @@ class PanduanPerawatanPage extends StatelessWidget {
                 ],
               ),
             ),
-
             const SizedBox(height: 20),
-
-            // --- HERO IMAGE ---
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: Image.network(
-                  'https://images.unsplash.com/photo-1561181286-d3fee7d55364?q=80&w=800',
+                child: Image.asset(
+                  'assets/images/bunga_mawar.jpg',
                   width: double.infinity,
                   height: 220,
                   fit: BoxFit.cover,
@@ -100,10 +143,7 @@ class PanduanPerawatanPage extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 24),
-
-            // --- SUBTITLE ---
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
@@ -115,10 +155,7 @@ class PanduanPerawatanPage extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 16),
-
-            // --- TIPS CARDS ---
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
@@ -145,15 +182,12 @@ class PanduanPerawatanPage extends StatelessWidget {
                     iconData: Icons.eco_outlined,
                     title: "Nutrisi Esensial",
                     desc:
-                        "Selalu gunakan paket makanan bunga yang disediakan. Ini mengandung ensiklopedia terperinci dari campuran gula yang sempurna untuk nutrisi dan asidifier untuk menjaga air tetap mengalir.",
+                        "Selalu gunakan paket makanan bunga yang disediakan. Ini mengandung campuran gula yang sempurna untuk nutrisi dan asidifier untuk menjaga air tetap mengalir.",
                   ),
                 ],
               ),
             ),
-
             const SizedBox(height: 24),
-
-            // --- CTA BANNER ---
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Container(
@@ -200,9 +234,8 @@ class PanduanPerawatanPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     OutlinedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/perpustakaan-tanaman');
-                      },
+                      onPressed: () =>
+                          Navigator.pushNamed(context, '/perpustakaan-tanaman'),
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(color: Colors.white, width: 1.5),
                         shape: RoundedRectangleBorder(
@@ -226,44 +259,9 @@ class PanduanPerawatanPage extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 32),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: const Color(0xFFBC1A6F),
-        unselectedItemColor: Colors.black45,
-        currentIndex: 0,
-        selectedLabelStyle: const TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.bold,
-        ),
-        unselectedLabelStyle: const TextStyle(fontSize: 11),
-        onTap: (index) {},
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Beranda',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.local_florist_outlined),
-            activeIcon: Icon(Icons.local_florist),
-            label: 'Katalog',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            activeIcon: Icon(Icons.favorite),
-            label: 'Wishlist',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Akun',
-          ),
-        ],
       ),
     );
   }
@@ -292,8 +290,8 @@ class PanduanPerawatanPage extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFCE4EC),
+            decoration: const BoxDecoration(
+              color: Color(0xFFFCE4EC),
               shape: BoxShape.circle,
             ),
             child: Icon(iconData, color: const Color(0xFFBC1A6F), size: 22),

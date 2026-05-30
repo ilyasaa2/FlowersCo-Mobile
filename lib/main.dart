@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
       title: 'Flowers.co',
       theme: ThemeData(useMaterial3: true, primarySwatch: Colors.pink),
 
-      initialRoute: '/',
+      initialRoute: '/home',
 
       routes: {
         '/': (context) => const LoginPage(),
@@ -64,23 +64,19 @@ class MyApp extends StatelessWidget {
         '/perpustakaan-tanaman': (context) => const PerpustakaanTanamanPage(),
         '/pembayaran-berhasil': (context) => const PembayaranBerhasilPage(),
 
+        // Detail tanaman — cukup kirim plant saja
         '/detail-tanaman': (context) {
           final args =
               ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>;
-
-          return DetailTanamanPage(
-            plant: args['plant'],
-            isFavorite: args['isFavorite'],
-            onFavoriteToggle: args['onFavoriteToggle'],
-          );
+          return DetailTanamanPage(plant: args['plant']);
         },
 
+        // Detail tip
         '/detail-tip': (context) {
           final tip =
               ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>;
-
           return DetailTipPage(tip: tip);
         },
       },
