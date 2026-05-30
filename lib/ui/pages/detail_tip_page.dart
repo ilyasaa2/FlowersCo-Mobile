@@ -13,6 +13,17 @@ class DetailTipPage extends StatelessWidget {
   final Map<String, dynamic> tip;
   const DetailTipPage({super.key, required this.tip});
 
+  // PERBAIKAN: Helper navigasi navbar
+  void _onNavbarTap(BuildContext context, int index) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (_) => MainNavigationPage(initialIndex: index),
+      ),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final String title = (tip["title"] ?? "Tips").toString().replaceAll(
@@ -24,6 +35,8 @@ class DetailTipPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
+      // PERBAIKAN: currentIndex: 1 sudah benar (Katalog),
+      // onTap menggunakan _onNavbarTap sehingga semua tab bisa diklik dengan benar
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         selectedItemColor: const Color(0xFFBC1A6F),
@@ -34,15 +47,7 @@ class DetailTipPage extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
         unselectedLabelStyle: const TextStyle(fontSize: 11),
-        onTap: (index) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (_) => MainNavigationPage(initialIndex: index),
-            ),
-            (route) => false,
-          );
-        },
+        onTap: (index) => _onNavbarTap(context, index),
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),

@@ -303,7 +303,6 @@ class PlantData {
     },
   ];
 
-  // Tips Hari Ini — dipilih secara random per sesi login
   static final List<Map<String, dynamic>> dailyTips = [
     {
       "title": "Rahasia Mawar\nTetap Segar\nSepanjang Minggu",
@@ -601,6 +600,17 @@ class _PerpustakaanTanamanPageState extends State<PerpustakaanTanamanPage> {
     });
   }
 
+  // PERBAIKAN: Helper untuk navigasi navbar yang benar
+  void _onNavbarTap(int index) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (_) => MainNavigationPage(initialIndex: index),
+      ),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final filtered = _filteredPlants;
@@ -608,48 +618,9 @@ class _PerpustakaanTanamanPageState extends State<PerpustakaanTanamanPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       drawer: const CustomSidebar(),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: const Color(0xFFBC1A6F),
-        unselectedItemColor: Colors.black45,
-        currentIndex: 1,
-        selectedLabelStyle: const TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.bold,
-        ),
-        unselectedLabelStyle: const TextStyle(fontSize: 11),
-        onTap: (index) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (_) => MainNavigationPage(initialIndex: index),
-            ),
-            (route) => false,
-          );
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Beranda',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.local_florist_outlined),
-            activeIcon: Icon(Icons.local_florist),
-            label: 'Katalog',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            activeIcon: Icon(Icons.favorite),
-            label: 'Wishlist',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Akun',
-          ),
-        ],
-      ),
+
+      // PERBAIKAN: AppBar sendiri karena halaman ini di-push via Navigator,
+      // bukan bagian dari IndexedStack di MainNavigationPage
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -684,6 +655,45 @@ class _PerpustakaanTanamanPageState extends State<PerpustakaanTanamanPage> {
           ),
         ],
       ),
+
+      // PERBAIKAN: currentIndex: 1 (Katalog) sudah benar karena halaman ini
+      // bagian dari alur Katalog. onTap menggunakan _onNavbarTap agar
+      // klik Beranda (index 0) benar-benar kembali ke Beranda.
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: const Color(0xFFBC1A6F),
+        unselectedItemColor: Colors.black45,
+        currentIndex: 1,
+        selectedLabelStyle: const TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+        ),
+        unselectedLabelStyle: const TextStyle(fontSize: 11),
+        onTap: _onNavbarTap,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: 'Beranda',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_florist_outlined),
+            activeIcon: Icon(Icons.local_florist),
+            label: 'Katalog',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border),
+            activeIcon: Icon(Icons.favorite),
+            label: 'Wishlist',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            activeIcon: Icon(Icons.person),
+            label: 'Akun',
+          ),
+        ],
+      ),
+
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -788,7 +798,7 @@ class _PerpustakaanTanamanPageState extends State<PerpustakaanTanamanPage> {
 
             const SizedBox(height: 12),
 
-            // --- TIPS HARI INI (hanya tab Semua & tidak sedang search) ---
+            // --- TIPS HARI INI ---
             if (_selectedTab == 0 && _searchQuery.isEmpty) ...[
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -1027,7 +1037,7 @@ class _PerpustakaanTanamanPageState extends State<PerpustakaanTanamanPage> {
                     top: Radius.circular(16),
                   ),
                   child: _buildPlantImage(
-                    plant["imageUrl"] ?? "assets/images/Bunga mawar.jpg",
+                    plant["imageUrl"] ?? "assets/images/bunga_mawar.jpg",
                     180,
                   ),
                 ),
@@ -1046,7 +1056,7 @@ class _PerpustakaanTanamanPageState extends State<PerpustakaanTanamanPage> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      isIndoor ? " Indoor" : " Bunga Potong",
+                      isIndoor ? "🌿 Indoor" : "🌸 Bunga Potong",
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 10,

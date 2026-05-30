@@ -12,6 +12,17 @@ class DetailTanamanPage extends StatefulWidget {
 class _DetailTanamanPageState extends State<DetailTanamanPage> {
   bool _isFavorite = false;
 
+  // PERBAIKAN: Helper navigasi navbar
+  void _onNavbarTap(int index) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (_) => MainNavigationPage(initialIndex: index),
+      ),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final plant = widget.plant;
@@ -21,6 +32,8 @@ class _DetailTanamanPageState extends State<DetailTanamanPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      // PERBAIKAN: currentIndex: 1 sudah benar (Katalog),
+      // onTap menggunakan _onNavbarTap sehingga semua tab bisa diklik dengan benar
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         selectedItemColor: const Color(0xFFBC1A6F),
@@ -31,15 +44,7 @@ class _DetailTanamanPageState extends State<DetailTanamanPage> {
           fontWeight: FontWeight.bold,
         ),
         unselectedLabelStyle: const TextStyle(fontSize: 11),
-        onTap: (index) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (_) => MainNavigationPage(initialIndex: index),
-            ),
-            (route) => false,
-          );
-        },
+        onTap: _onNavbarTap,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
@@ -118,7 +123,7 @@ class _DetailTanamanPageState extends State<DetailTanamanPage> {
                 fit: StackFit.expand,
                 children: [
                   Image.asset(
-                    plant["imageUrl"] ?? "assets/images/Bunga mawar.jpg",
+                    plant["imageUrl"] ?? "assets/images/bunga_mawar.jpg",
                     fit: BoxFit.cover,
                     errorBuilder: (c, e, s) => Container(
                       color: const Color(0xFFFCE4EC),
@@ -313,8 +318,8 @@ class _DetailTanamanPageState extends State<DetailTanamanPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: const [
+                          const Row(
+                            children: [
                               Icon(
                                 Icons.tips_and_updates_outlined,
                                 color: Color(0xFFBC1A6F),

@@ -30,10 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-<<<<<<< HEAD
     
-=======
->>>>>>> 1a6b6bc015b2aa5b00dc7d2f4492331d4bcf83c5
   http: ^1.2.0
 
   # The following adds the Cupertino Icons font to your application.
@@ -57,19 +54,9 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   uses-material-design: true
-
+ 
   assets:
-    - assets/images/bunga_mawar.jpg
-    - assets/images/bunga_matahari.jpg
-    - assets/images/bunga_melati.jpg
-    - assets/images/bougenville.jpg
-    - assets/images/sirih_gading.jpg
-    - assets/images/sri_rejeki.jpg
-    - assets/images/lidah_mertua.jpg
-    - assets/images/lidah_buaya.jpg
-    - assets/images/monstera.jpg
-    - assets/images/kunyit.jpg
-    - assets/images/serai.jpg
+    - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

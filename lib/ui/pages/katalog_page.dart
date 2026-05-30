@@ -8,9 +8,7 @@ import '../../data/models/app_state.dart';
 class KatalogPage extends StatelessWidget {
   const KatalogPage({super.key});
 
-  // Fungsi untuk mengambil data dari MySQL via API Web Anda
   Future<List<Product>> _fetchProductsFromDatabase() async {
-    // Ganti URL di bawah ini dengan URL file PHP/API di hosting/web server Anda
     final url = Uri.parse('http://localhost/api_flowers/get_products.php');
 
     try {
@@ -34,14 +32,14 @@ class KatalogPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: const CustomSidebar(), // Sesuaikan warna background
+      // PERBAIKAN: bottomNavigationBar: const CustomSidebar() DIHAPUS
+      // Navbar sudah dikelola oleh MainNavigationPage
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // --- REVISI: JUDUL SEKARANG RATA KIRI (LEBIH CANTIK & KONSISTEN) ---
               const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -94,11 +92,10 @@ class KatalogPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // --- PRODUCT GRID DENGAN FUTUREBUILDER (DARI DATABASE) ---
+              // --- PRODUCT GRID ---
               FutureBuilder<List<Product>>(
                 future: _fetchProductsFromDatabase(),
                 builder: (context, snapshot) {
-                  // Saat data sedang loading/loading dari web
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
                       child: Padding(
@@ -112,7 +109,6 @@ class KatalogPage extends StatelessWidget {
                     );
                   }
 
-                  // Jika terjadi error saat fetch data
                   if (snapshot.hasError) {
                     return Center(
                       child: Padding(
@@ -126,7 +122,6 @@ class KatalogPage extends StatelessWidget {
                     );
                   }
 
-                  // Jika data kosong
                   if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return const Center(
                       child: Padding(
@@ -136,7 +131,6 @@ class KatalogPage extends StatelessWidget {
                     );
                   }
 
-                  // Jika data berhasil diambil, tampilkan ke GridView
                   final products = snapshot.data!;
                   return GridView.builder(
                     shrinkWrap: true,
@@ -232,10 +226,7 @@ class KatalogPage extends StatelessWidget {
                     child: Image.network(
                       'http://localhost/api_flowers/img/${item.gambar}',
                       fit: BoxFit.cover,
-                      // 1. Menangani jika item.gambar kosong atau null di database
                       errorBuilder: (context, error, stackTrace) {
-                        // 2. Jika gagal (baik karena file tidak ada di folder img atau masalah CORS),
-                        // maka tampilkan gambar default dari aset lokal Anda
                         return Image.asset(
                           'assets/bunga_default.png',
                           fit: BoxFit.cover,

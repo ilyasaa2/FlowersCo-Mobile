@@ -24,7 +24,7 @@ class PanduanPerawatanPage extends StatelessWidget {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (_) => MainNavigationPage(initialIndex: index),
+              builder: (_) => MainNavigationPage(initialIndex: 1),
             ),
             (route) => false,
           );
