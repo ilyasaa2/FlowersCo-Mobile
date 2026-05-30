@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'ui/auth/login_page.dart';
 import 'ui/auth/register_page.dart';
 import 'ui/auth/forgot_password_page.dart';
-import 'ui/pages/homepage.dart';
 import 'ui/pages/katalog_page.dart';
 import 'ui/pages/keranjang_page.dart';
-import 'ui/pages/pembayaran_page.dart';
 import 'ui/pages/profile_page.dart';
 import 'ui/pages/lengkapi_profil_page.dart';
 import 'ui/pages/riwayat_pesanan_page.dart';
@@ -24,6 +22,7 @@ import 'ui/pages/pembayaran_berhasil_page.dart';
 import 'ui/pages/detail_tanaman_page.dart';
 import 'ui/pages/detail_tip_page.dart';
 import 'ui/pages/selesai_pembayaran_page.dart';
+import 'ui/pages/wishlist_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -63,6 +62,7 @@ class MyApp extends StatelessWidget {
         '/panduan-perawatan': (context) => const PanduanPerawatanPage(),
         '/perpustakaan-tanaman': (context) => const PerpustakaanTanamanPage(),
         '/pembayaran-berhasil': (context) => const PembayaranBerhasilPage(),
+        '/wishlist': (context) => const WishlistPage(),
 
         // Detail tanaman — cukup kirim plant saja
         '/detail-tanaman': (context) {

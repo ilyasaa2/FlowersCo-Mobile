@@ -341,7 +341,7 @@ class _LoginPageState extends State<LoginPage> {
                               if (_formKey.currentState!.validate()) {
                                 var response = await http.post(
                                   Uri.parse(
-                                    "http://127.0.0.1/FlowerscoMobile/login.php",
+                                    "http://127.0.0.1/api_flowers/login.php",
                                   ),
 
                                   body: {

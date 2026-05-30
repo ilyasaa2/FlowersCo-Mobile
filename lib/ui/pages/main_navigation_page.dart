@@ -24,11 +24,17 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   }
 
   // Daftar halaman utama aplikasi
-  final List<Widget> _pages = [
-    const HomePage(), // Index 0
-    const KatalogPage(), // Index 1
-    const WishlistPage(), // Index 2
-    const ProfilePage(), // Index 3
+  List<Widget> get _pages => [
+    HomePage(
+      onNavigateToKatalog: () {
+        setState(() {
+          _currentIndex = 1;
+        });
+      },
+    ),
+    const KatalogPage(),
+    const WishlistPage(),
+    const ProfilePage(),
   ];
 
   @override
@@ -64,11 +70,9 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
         ],
       ),
 
-      // 2. Pasang Sidebar Custom kamu di sini
       drawer: const CustomSidebar(),
 
-      body: _pages[_currentIndex], // Menampilkan halaman aktif
-
+      body: IndexedStack(index: _currentIndex, children: _pages),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         selectedItemColor: const Color(0xFFBC1A6F),
