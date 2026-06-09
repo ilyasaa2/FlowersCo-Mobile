@@ -1,16 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../components/custom_sidebar.dart';
 import '../../data/models/product_model.dart';
 import '../../data/models/app_state.dart';
 
-class KatalogPage extends StatelessWidget {
+class KatalogPage extends StatefulWidget {
   const KatalogPage({super.key});
 
-  Future<List<Product>> _fetchProductsFromDatabase() async {
-    final url = Uri.parse('http://localhost/api_flowers/get_products.php');
+  @override
+  State<KatalogPage> createState() => _KatalogPageState();
+}
 
+class _KatalogPageState extends State<KatalogPage> {
+  // Base URL Server Backend (Disarankan pakai IP Local PC Anda jika testing via HP/Emulator)
+  // Contoh: 'http://192.168.1.10/api_flowers/'
+  final String baseUrl = 'http://localhost/api_flowers'; 
+
+  List<Product> _allProducts = [];
+  List<Product> _filteredProducts = [];
+  bool _isLoading = true;
+  String _errorMessage = '';
+  
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProducts();
+  }
+
+  // Mengambil data dari database hanya sekali saat init
+  Future<void> _loadProducts() async {
+    final url = Uri.parse('$baseUrl/get_products.php');
     try {
       final response = await http.get(url);
 
@@ -19,31 +40,61 @@ class KatalogPage extends StatelessWidget {
         List<Product> products = body
             .map((dynamic item) => Product.fromJson(item))
             .toList();
-        return products;
+        
+        setState(() {
+          _allProducts = products;
+          _filteredProducts = products;
+          _isLoading = false;
+        });
       } else {
-        throw Exception('Gagal memuat produk dari server');
+        setState(() {
+          _errorMessage = 'Gagal memuat produk dari server';
+          _isLoading = false;
+        });
       }
     } catch (e) {
-      throw Exception('Gagal terhubung ke server: $e');
+      setState(() {
+        _errorMessage = 'Gagal terhubung ke server: $e';
+        _isLoading = false;
+      });
     }
+  }
+
+  // Fungsi memfilter produk berdasarkan input search bar
+  void _filterSearch(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        _filteredProducts = _allProducts;
+      } else {
+        _filteredProducts = _allProducts
+            .where((product) =>
+                product.nama.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // PERBAIKAN: bottomNavigationBar: const CustomSidebar() DIHAPUS
-      // Navbar sudah dikelola oleh MainNavigationPage
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Column(
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // --- HEADER & SEARCH BAR (Dibuat tetap di atas / tidak ikut scroll) ---
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Katalog',
                     style: TextStyle(
                       fontSize: 28,
@@ -51,119 +102,107 @@ class KatalogPage extends StatelessWidget {
                       color: Color(0xFFBC1A6F),
                     ),
                   ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Temukan buket sempurna untuk setiap\nkesempatan',
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Temukan buket sempurna untuk setiap kesempatan',
                     style: TextStyle(fontSize: 14, color: Colors.black54),
                   ),
+                  const SizedBox(height: 20),
+
+                  // --- SEARCH BAR AKTIF ---
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: TextField(
+                      controller: _searchController,
+                      onChanged: _filterSearch, // Memanggil filter setiap ada perubahan teks
+                      decoration: const InputDecoration(
+                        hintText: 'Cari produk...',
+                        hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                        prefixIcon: Icon(Icons.search, color: Colors.grey),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(vertical: 15),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // --- FILTER CHIPS ---
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        _buildFilterChip('Semua Produk', isSelected: true),
+                        _buildFilterChip('Valentine', icon: Icons.favorite),
+                        _buildFilterChip('Ulang Tahun', icon: Icons.cake),
+                        _buildFilterChip('Wisuda', icon: Icons.school),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
                 ],
               ),
-              const SizedBox(height: 24),
+            ),
 
-              // --- SEARCH BAR ---
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: const TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Cari produk...',
-                    hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
-                    prefixIcon: Icon(Icons.search, color: Colors.grey),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(vertical: 15),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // --- FILTER CHIPS ---
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    _buildFilterChip('Semua Produk', isSelected: true),
-                    _buildFilterChip('Valentine', icon: Icons.favorite),
-                    _buildFilterChip('Ulang Tahun', icon: Icons.cake),
-                    _buildFilterChip('Wisuda', icon: Icons.school),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // --- PRODUCT GRID ---
-              FutureBuilder<List<Product>>(
-                future: _fetchProductsFromDatabase(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 40),
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Color(0xFFBC1A6F),
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 40),
-                        child: Text(
-                          'Error: ${snapshot.error}',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      ),
-                    );
-                  }
-
-                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 40),
-                        child: Text('Tidak ada produk tersedia di database.'),
-                      ),
-                    );
-                  }
-
-                  final products = snapshot.data!;
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: products.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 20,
-                          childAspectRatio: 0.60,
-                        ),
-                    itemBuilder: (context, index) {
-                      return _buildProductCard(
-                        context: context,
-                        item: products[index],
-                      );
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
+            // --- PRODUCT GRID AREA ---
+            Expanded(
+              child: _buildProductContent(),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildFilterChip(
-    String label, {
-    bool isSelected = false,
-    IconData? icon,
-  }) {
+  Widget _buildProductContent() {
+    if (_isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFBC1A6F)),
+        ),
+      );
+    }
+
+    if (_errorMessage.isNotEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Text(
+            _errorMessage,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.red),
+          ),
+        ),
+      );
+    }
+
+    if (_filteredProducts.isEmpty) {
+      return const Center(
+        child: Text('Produk tidak ditemukan.'),
+      );
+    }
+
+    return GridView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      itemCount: _filteredProducts.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 20,
+        childAspectRatio: 0.58, // Disesuaikan agar tombol "Tambah ke Keranjang" aman dari overflow
+      ),
+      itemBuilder: (context, index) {
+        return _buildProductCard(
+          context: context,
+          item: _filteredProducts[index],
+        );
+      },
+    );
+  }
+
+  Widget _buildFilterChip(String label, {bool isSelected = false, IconData? icon}) {
     return Container(
       margin: const EdgeInsets.only(right: 8),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -194,10 +233,7 @@ class KatalogPage extends StatelessWidget {
     );
   }
 
-  Widget _buildProductCard({
-    required BuildContext context,
-    required Product item,
-  }) {
+  Widget _buildProductCard({required BuildContext context, required Product item}) {
     bool isBestSeller = item.kategori == 'Best Seller';
 
     return Container(
@@ -220,16 +256,17 @@ class KatalogPage extends StatelessWidget {
               children: [
                 Positioned.fill(
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(16),
-                    ),
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
                     child: Image.network(
-                      'http://localhost/api_flowers/img/${item.gambar}',
+                      '$baseUrl/img/${item.gambar}',
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
-                        return Image.asset(
-                          'assets/bunga_default.png',
-                          fit: BoxFit.cover,
+                        // Callback jika network image diblokir CORS atau URL rusak
+                        return Container(
+                          color: Colors.grey[200],
+                          child: const Center(
+                            child: Icon(Icons.broken_image, color: Colors.grey, size: 40),
+                          ),
                         );
                       },
                     ),
@@ -240,10 +277,7 @@ class KatalogPage extends StatelessWidget {
                     top: 8,
                     left: 8,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: const Color(0xFFBC1A6F),
                         borderRadius: BorderRadius.circular(8),
@@ -267,12 +301,8 @@ class KatalogPage extends StatelessWidget {
                       bool isFavorited = wishlist.any((e) => e.id == item.id);
                       return IconButton(
                         icon: Icon(
-                          isFavorited
-                              ? Icons.favorite_rounded
-                              : Icons.favorite_border_rounded,
-                          color: isFavorited
-                              ? const Color(0xFFBC1A6F)
-                              : Colors.black45,
+                          isFavorited ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                          color: isFavorited ? const Color(0xFFBC1A6F) : Colors.black45,
                           size: 26,
                         ),
                         onPressed: () {
@@ -292,10 +322,7 @@ class KatalogPage extends StatelessWidget {
               children: [
                 Text(
                   item.nama,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -326,7 +353,7 @@ class KatalogPage extends StatelessWidget {
                       'Tambah ke Keranjang',
                       style: TextStyle(
                         color: Color(0xFFBC1A6F),
-                        fontSize: 12,
+                        fontSize: 11,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
