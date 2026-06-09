@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../components/custom_sidebar.dart';
 import '../../data/models/product_model.dart';
 import '../../data/models/app_state.dart';
 
