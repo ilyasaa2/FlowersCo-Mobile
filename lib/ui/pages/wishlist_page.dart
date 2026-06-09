@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/models/app_state.dart';
 import '../../data/models/product_model.dart';
-import '../components/custom_sidebar.dart';
+import 'package:flutter_application_1/ui/pages/main_navigation_page.dart';
 
 class WishlistPage extends StatelessWidget {
   const WishlistPage({super.key});
@@ -91,8 +91,16 @@ class WishlistPage extends StatelessWidget {
                             const SizedBox(height: 24),
                             ElevatedButton.icon(
                               onPressed: () {
-                                // Direct langsung ke katalog agar user bisa belanja
-                                Navigator.pushNamed(context, '/katalog');
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const MainNavigationPage(
+                                          initialIndex: 1,
+                                        ),
+                                  ),
+                                  (route) => false,
+                                );
                               },
                               icon: const Icon(
                                 Icons.search,
