@@ -154,7 +154,7 @@ class WishlistPage extends StatelessWidget {
                                     top: Radius.circular(16),
                                   ),
                                   child: Image.network(
-                                    product.gambar,
+                                    'https://pandemic-turbofan-alone.ngrok-free.dev/Flowersco/img/${product.gambar}',
                                     height: 380,
                                     width: double.infinity,
                                     fit: BoxFit.cover,

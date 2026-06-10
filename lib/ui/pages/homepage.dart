@@ -1,9 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import '../../data/models/product_model.dart';
+import '../../data/models/app_state.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   final Function(String) onNavigateToKatalog; // Callback diubah agar bisa mengirim data teks kategori
 
   const HomePage({super.key, required this.onNavigateToKatalog});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final String baseUrl = 'http://localhost/api_flowers';
+  List<Product> _featuredProducts = [];
+  bool _isLoading = true;
+  String _errorMessage = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProducts();
+  }
+
+  Future<void> _loadProducts() async {
+    final url = Uri.parse('$baseUrl/get_products.php');
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        List<dynamic> body = jsonDecode(response.body);
+        List<Product> products = body
+            .map((dynamic item) => Product.fromJson(item))
+            .toList();
+        
+        setState(() {
+          // Mengambil 3 produk pertama sebagai produk pilihan untuk beranda
+          _featuredProducts = products.take(3).toList();
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _errorMessage = 'Gagal memuat produk';
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Gagal terhubung ke server: $e';
+        _isLoading = false;
+      });
+    }
+  }
 
   // WIDGET HELPER: Kartu Kesempatan (Mendukung aksi klik)
   Widget _buildOccasionCard({
@@ -43,11 +93,10 @@ class HomePage extends StatelessWidget {
 
   // WIDGET HELPER: Item List Produk Vertikal
   Widget _buildVerticalProductCard({
-    required String name,
-    required String price,
-    required String desc,
-    required String imageUrl,
+    required BuildContext context,
+    required Product product,
   }) {
+    String imageUrl = 'http://localhost/api_flowers/img/${product.gambar}';
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
@@ -80,14 +129,23 @@ class HomePage extends StatelessWidget {
               Positioned(
                 top: 12,
                 right: 12,
-                child: CircleAvatar(
-                  backgroundColor: Colors.white.withOpacity(0.9),
-                  radius: 16,
-                  child: const Icon(
-                    Icons.favorite_border,
-                    size: 18,
-                    color: Colors.black54,
-                  ),
+                child: ValueListenableBuilder<List<Product>>(
+                  valueListenable: AppState.wishlistNotifier,
+                  builder: (context, wishlist, child) {
+                    bool isFavorited = wishlist.any((e) => e.id == product.id);
+                    return GestureDetector(
+                      onTap: () => AppState.toggleWishlist(product, context),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white.withOpacity(0.9),
+                        radius: 16,
+                        child: Icon(
+                          isFavorited ? Icons.favorite : Icons.favorite_border,
+                          size: 18,
+                          color: isFavorited ? const Color(0xFFBC1A6F) : Colors.black54,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
@@ -101,14 +159,14 @@ class HomePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      name,
+                      product.nama,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
                       ),
                     ),
                     Text(
-                      price,
+                      'Rp ${product.harga.toInt().toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]}.")}',
                       style: const TextStyle(
                         color: Color(0xFFBC1A6F),
                         fontWeight: FontWeight.bold,
@@ -118,8 +176,8 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 6),
-                Text(
-                  desc,
+                const Text(
+                  "Buket bunga segar pilihan terbaik untuk momen spesial Anda.",
                   style: const TextStyle(
                     color: Colors.black54,
                     fontSize: 12,
@@ -131,7 +189,9 @@ class HomePage extends StatelessWidget {
                   width: double.infinity,
                   height: 40,
                   child: OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      AppState.addToCart(product, context);
+                    },
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: Color(0xFFBC1A6F)),
                       shape: RoundedRectangleBorder(
@@ -213,7 +273,7 @@ class HomePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () => onNavigateToKatalog('Semua Produk'), // Pindah tab halus
+                    onPressed: () => widget.onNavigateToKatalog('Semua Produk'), // Pindah tab halus
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFBC1A6F),
                       shape: RoundedRectangleBorder(
@@ -266,22 +326,22 @@ class HomePage extends StatelessWidget {
                 _buildOccasionCard(
                   title: "Ulang Tahun",
                   imageUrl: 'https://images.unsplash.com/photo-1533616688419-b7a585564566?q=80&w=500',
-                  onTap: () => onNavigateToKatalog('Ulang Tahun'),
+                  onTap: () => widget.onNavigateToKatalog('Ulang Tahun'),
                 ),
                 _buildOccasionCard(
                   title: "Anniversary",
                   imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=500',
-                  onTap: () => onNavigateToKatalog('Anniversary'),
+                  onTap: () => widget.onNavigateToKatalog('Anniversary'),
                 ),
                 _buildOccasionCard(
                   title: "Pernikahan",
                   imageUrl: 'https://images.unsplash.com/photo-1523438885200-e635ba2c371e?q=80&w=500',
-                  onTap: () => onNavigateToKatalog('Pernikahan'),
+                  onTap: () => widget.onNavigateToKatalog('Pernikahan'),
                 ),
                 _buildOccasionCard(
                   title: "Wisuda",
                   imageUrl: 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=500',
-                  onTap: () => onNavigateToKatalog('Wisuda'),
+                  onTap: () => widget.onNavigateToKatalog('Wisuda'),
                 ),
               ],
             ),
@@ -300,7 +360,7 @@ class HomePage extends StatelessWidget {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 TextButton(
-                  onPressed: () => onNavigateToKatalog('Semua Produk'),
+                  onPressed: () => widget.onNavigateToKatalog('Semua Produk'),
                   child: const Text(
                     "Lihat Semua",
                     style: TextStyle(
@@ -313,18 +373,26 @@ class HomePage extends StatelessWidget {
             ),
           ),
 
-          _buildVerticalProductCard(
-            name: "Mimpi Peony Merah Muda",
-            price: "Rp 650.000",
-            desc: "Peony merah muda lembut dan dedaunan musiman dirangkai dalam satu keselarasan.",
-            imageUrl: 'https://images.unsplash.com/photo-1561181286-d3fee7d55364?q=80&w=600',
-          ),
-          _buildVerticalProductCard(
-            name: "Beri Tengah Midnight",
-            price: "Rp 1.250.000",
-            desc: "Mawar merah tua, dahlia burgundy, dan dedaunan subur.",
-            imageUrl: 'https://images.unsplash.com/photo-1525253086316-d0c936c814f8?q=80&w=600',
-          ),
+          // Menampilkan Produk Dinamis dari Database
+          if (_isLoading)
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: CircularProgressIndicator(color: Color(0xFFBC1A6F)),
+              ),
+            )
+          else if (_errorMessage.isNotEmpty)
+            Center(child: Text(_errorMessage))
+          else if (_featuredProducts.isEmpty)
+            const Center(child: Text("Tidak ada produk pilihan."))
+          else
+            ..._featuredProducts.map((product) {
+              return _buildVerticalProductCard(
+                context: context,
+                product: product,
+              );
+            }).toList(),
+            
           const SizedBox(height: 20),
         ],
       ),

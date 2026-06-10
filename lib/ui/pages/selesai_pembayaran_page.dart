@@ -34,7 +34,7 @@ class SelesaiPage extends StatelessWidget {
 
               // Teks Informasi
               const Text(
-                "Pembayaran Berhasil!",
+                "Pesanan Terkirim!",
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -43,7 +43,7 @@ class SelesaiPage extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               const Text(
-                "Terima kasih atas pembayaran Anda. Pesanan Anda telah diterima oleh Florist kami dan akan segera diproses.",
+                "Terima kasih! Pesanan Anda telah kami terima. Mohon tunggu konfirmasi pembayaran dari Admin.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
@@ -54,44 +54,14 @@ class SelesaiPage extends StatelessWidget {
 
               const Spacer(),
 
-              // PILIHAN 1: Tombol Lacak Pesanan
+              // Tombol Utama: Kembali ke Beranda
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    // Buka halaman Lacak Pesanan yang terdaftar di route '/lacak-pesanan'
-                    Navigator.pushNamed(context, '/lacak-pesanan');
-                  },
-                  icon: const Icon(Icons.local_shipping, color: Colors.white),
-                  label: const Text(
-                    "Lacak Pesanan Anda",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFBC1A6F),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 0,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-
-              // PILIHAN 2: Tombol Kembali ke Beranda
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: () {
-                    // Pindah ke MainNavigationPage dan minta buka Index Beranda (Index 0)
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        // 👈 KATA 'const' DI SINI JUGA SUDAH DIHAPUS
                         builder: (context) =>
                             MainNavigationPage(initialIndex: 0),
                       ),
@@ -100,20 +70,17 @@ class SelesaiPage extends StatelessWidget {
                   },
                   icon: const Icon(
                     Icons.home_outlined,
-                    color: Color(0xFFBC1A6F),
+                    color: Colors.white,
                   ),
                   label: const Text(
                     "Kembali ke Beranda",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFFBC1A6F),
+                      color: Colors.white,
                     ),
                   ),
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(
-                      color: Color(0xFFBC1A6F),
-                      width: 1.5,
-                    ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFBC1A6F),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

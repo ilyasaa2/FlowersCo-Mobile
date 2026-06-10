@@ -3,6 +3,10 @@ import 'homepage.dart';
 import 'katalog_page.dart';
 import 'wishlist_page.dart';
 import 'profile_page.dart';
+import '../components/custom_sidebar.dart';
+import 'keranjang_page.dart';
+import '../../data/models/product_model.dart';
+import '../../data/models/app_state.dart';
 
 // Silahkan sesuaikan import Wishlist dan Profile di bawah ini dengan project Anda
 // import 'wishlist/wishlist_page.dart'; 
@@ -44,6 +48,51 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     ];
 
     return Scaffold(
+      drawer: const CustomSidebar(),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu, color: Color(0xFFBC1A6F)),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
+        centerTitle: true,
+        title: const Text(
+          "Flowers.co",
+          style: TextStyle(
+            color: Color(0xFFBC1A6F),
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+        actions: [
+          ValueListenableBuilder<List<Product>>(
+            valueListenable: AppState.cartNotifier,
+            builder: (context, cart, child) {
+              return Badge(
+                label: Text(cart.length.toString()),
+                isLabelVisible: cart.isNotEmpty,
+                backgroundColor: const Color(0xFFBC1A6F),
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.shopping_bag_outlined,
+                    color: Color(0xFFBC1A6F),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const KeranjangPage()),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+        ],
+      ),
       body: IndexedStack(
         index: _selectedIndex,
         children: _pages, // Menggunakan IndexedStack membuat data katalog tidak ter-reset saat pindah tab

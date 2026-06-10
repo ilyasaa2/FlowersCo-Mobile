@@ -5,7 +5,8 @@ import '../../data/models/product_model.dart';
 import '../../data/models/app_state.dart';
 
 class KatalogPage extends StatefulWidget {
-  final String? initialCategory; // Menerima lemparan data kategori awal dari HomePage
+  final String?
+  initialCategory; // Menerima lemparan data kategori awal dari HomePage
 
   const KatalogPage({super.key, this.initialCategory});
 
@@ -14,14 +15,16 @@ class KatalogPage extends StatefulWidget {
 }
 
 class _KatalogPageState extends State<KatalogPage> {
-  final String baseUrl = 'http://localhost/api_flowers'; 
+  // Base URL Server Backend (Disarankan pakai IP Local PC Anda jika testing via HP/Emulator)
+  // Contoh: 'http://192.168.1.10/api_flowers/'
+  final String baseUrl =
+      'https://pandemic-turbofan-alone.ngrok-free.dev/api_flowers';
 
   List<Product> _allProducts = [];
   List<Product> _filteredProducts = [];
   bool _isLoading = true;
   String _errorMessage = '';
-  
-  String _selectedCategory = 'Semua Produk'; // Menyimpan state kategori aktif di Katalog
+  String _selectedCategory = 'Semua Produk';
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -29,6 +32,26 @@ class _KatalogPageState extends State<KatalogPage> {
     super.initState();
     _selectedCategory = widget.initialCategory ?? 'Semua Produk';
     _loadProducts();
+  }
+
+  void _filterSearch(String value) {
+    _applyFilter();
+  }
+
+  void _applyFilter() {
+    setState(() {
+      _filteredProducts = _allProducts.where((product) {
+        final matchCategory =
+            _selectedCategory == 'Semua Produk' ||
+            product.kategori == _selectedCategory;
+
+        final matchSearch = product.nama.toLowerCase().contains(
+          _searchController.text.toLowerCase(),
+        );
+
+        return matchCategory && matchSearch;
+      }).toList();
+    });
   }
 
   // JIKA WIDGET DI-REBUILD OLEH PARENT (Ditekan dari HomePage)
@@ -53,7 +76,7 @@ class _KatalogPageState extends State<KatalogPage> {
         List<Product> products = body
             .map((dynamic item) => Product.fromJson(item))
             .toList();
-        
+
         setState(() {
           _allProducts = products;
           _isLoading = false;
@@ -71,23 +94,6 @@ class _KatalogPageState extends State<KatalogPage> {
         _isLoading = false;
       });
     }
-  }
-
-  // FUNGSI UTAMA: Menggabungkan Filter Kategori & Filter Search Bar
-  void _applyFilter() {
-    String query = _searchController.text.toLowerCase();
-    setState(() {
-      _filteredProducts = _allProducts.where((product) {
-        // 1. Cek search bar cocok atau tidak
-        bool matchesSearch = product.nama.toLowerCase().contains(query);
-        
-        // 2. Cek kategori cocok atau tidak (Gunakan toLowerCase agar aman dari perbedaan huruf kapital di DB)
-        bool matchesCategory = _selectedCategory == 'Semua Produk' ||
-            product.kategori.toLowerCase() == _selectedCategory.toLowerCase();
-
-        return matchesSearch && matchesCategory;
-      }).toList();
-    });
   }
 
   @override
@@ -133,7 +139,8 @@ class _KatalogPageState extends State<KatalogPage> {
                     ),
                     child: TextField(
                       controller: _searchController,
-                      onChanged: (value) => _applyFilter(), // Filter real-time setiap ngetik
+                      onChanged:
+                          _filterSearch, // Memanggil filter setiap ada perubahan teks
                       decoration: const InputDecoration(
                         hintText: 'Cari produk...',
                         hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
@@ -150,44 +157,49 @@ class _KatalogPageState extends State<KatalogPage> {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        _buildFilterChip('Semua Produk', 
+                        _buildFilterChip(
+                          'Semua Produk',
                           isSelected: _selectedCategory == 'Semua Produk',
                           onTap: () {
                             setState(() => _selectedCategory = 'Semua Produk');
                             _applyFilter();
-                          }
+                          },
                         ),
-                        _buildFilterChip('Anniversary', 
+                        _buildFilterChip(
+                          'Anniversary',
                           icon: Icons.favorite,
                           isSelected: _selectedCategory == 'Anniversary',
                           onTap: () {
                             setState(() => _selectedCategory = 'Anniversary');
                             _applyFilter();
-                          }
+                          },
                         ),
-                        _buildFilterChip('Ulang Tahun', 
+                        _buildFilterChip(
+                          'Ulang Tahun',
                           icon: Icons.cake,
                           isSelected: _selectedCategory == 'Ulang Tahun',
                           onTap: () {
                             setState(() => _selectedCategory = 'Ulang Tahun');
                             _applyFilter();
-                          }
+                          },
                         ),
-                        _buildFilterChip('Pernikahan', 
+                        _buildFilterChip(
+                          'Pernikahan',
                           icon: Icons.wc,
                           isSelected: _selectedCategory == 'Pernikahan',
                           onTap: () {
                             setState(() => _selectedCategory = 'Pernikahan');
                             _applyFilter();
-                          }
+                          },
                         ),
-                        _buildFilterChip('Wisuda', 
+                        _buildFilterChip(
+                          'Wisuda',
                           icon: Icons.school,
                           isSelected: _selectedCategory == 'Wisuda',
                           onTap: () {
                             setState(() => _selectedCategory = 'Wisuda');
                             _applyFilter();
-                          }
+                          },
                         ),
                       ],
                     ),
@@ -198,9 +210,7 @@ class _KatalogPageState extends State<KatalogPage> {
             ),
 
             // --- PRODUCT GRID AREA ---
-            Expanded(
-              child: _buildProductContent(),
-            ),
+            Expanded(child: _buildProductContent()),
           ],
         ),
       ),
@@ -230,9 +240,7 @@ class _KatalogPageState extends State<KatalogPage> {
     }
 
     if (_filteredProducts.isEmpty) {
-      return const Center(
-        child: Text('Produk tidak ditemukan.'),
-      );
+      return const Center(child: Text('Produk tidak ditemukan.'));
     }
 
     return GridView.builder(
@@ -242,7 +250,8 @@ class _KatalogPageState extends State<KatalogPage> {
         crossAxisCount: 2,
         crossAxisSpacing: 16,
         mainAxisSpacing: 20,
-        childAspectRatio: 0.58, 
+        childAspectRatio:
+            0.58, // Disesuaikan agar tombol "Tambah ke Keranjang" aman dari overflow
       ),
       itemBuilder: (context, index) {
         return _buildProductCard(
@@ -253,42 +262,50 @@ class _KatalogPageState extends State<KatalogPage> {
     );
   }
 
-  // Widget filter chip yang sekarang dibungkus GestureDetector agar responsif terhadap klik
-  Widget _buildFilterChip(String label, {required bool isSelected, IconData? icon, required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.only(right: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFBC1A6F) : Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: const Color(0xFFBC1A6F), width: 1),
-        ),
-        child: Row(
-          children: [
-            if (icon != null)
-              Icon(
-                icon,
-                size: 16,
-                color: isSelected ? Colors.white : const Color(0xFFBC1A6F),
+  Widget _buildFilterChip(
+    String label, {
+    IconData? icon,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          decoration: BoxDecoration(
+            color: isSelected ? Colors.red : Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null)
+                Icon(
+                  icon,
+                  size: 18,
+                  color: isSelected ? Colors.white : Colors.black54,
+                ),
+              if (icon != null) const SizedBox(width: 5),
+              Text(
+                label,
+                style: TextStyle(
+                  color: isSelected ? Colors.white : Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            if (icon != null) const SizedBox(width: 4),
-            Text(
-              label,
-              style: TextStyle(
-                color: isSelected ? Colors.white : const Color(0xFFBC1A6F),
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildProductCard({required BuildContext context, required Product item}) {
+  Widget _buildProductCard({
+    required BuildContext context,
+    required Product item,
+  }) {
     bool isBestSeller = item.kategori == 'Best Seller';
 
     return Container(
@@ -311,15 +328,21 @@ class _KatalogPageState extends State<KatalogPage> {
               children: [
                 Positioned.fill(
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                    child: Image.asset(
-                      'assets/images/${item.gambar}',
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(16),
+                    ),
+                    child: Image.network(
+                      'https://pandemic-turbofan-alone.ngrok-free.dev/Flowersco/img/${item.gambar}',
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
                           color: Colors.grey[200],
                           child: const Center(
-                            child: Icon(Icons.broken_image, color: Colors.grey, size: 40),
+                            child: Icon(
+                              Icons.broken_image,
+                              color: Colors.grey,
+                              size: 40,
+                            ),
                           ),
                         );
                       },
@@ -331,7 +354,10 @@ class _KatalogPageState extends State<KatalogPage> {
                     top: 8,
                     left: 8,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: const Color(0xFFBC1A6F),
                         borderRadius: BorderRadius.circular(8),
@@ -355,8 +381,12 @@ class _KatalogPageState extends State<KatalogPage> {
                       bool isFavorited = wishlist.any((e) => e.id == item.id);
                       return IconButton(
                         icon: Icon(
-                          isFavorited ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                          color: isFavorited ? const Color(0xFFBC1A6F) : Colors.black45,
+                          isFavorited
+                              ? Icons.favorite_rounded
+                              : Icons.favorite_border_rounded,
+                          color: isFavorited
+                              ? const Color(0xFFBC1A6F)
+                              : Colors.black45,
                           size: 26,
                         ),
                         onPressed: () {
@@ -375,21 +405,29 @@ class _KatalogPageState extends State<KatalogPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  item.kategori.isNotEmpty && item.kategori != 'Best Seller'
-                      ? item.kategori.toUpperCase()
+                  (item.kategori ?? '').isNotEmpty &&
+                          item.kategori != 'Best Seller'
+                      ? item.kategori!.toUpperCase()
                       : 'UMUM',
                   style: const TextStyle(
-                    color: Color(0xFFBC1A6F), 
+                    color: Color(
+                      0xFFBC1A6F,
+                    ), // Warna pink magenta sesuai tema aplikasi Anda
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.1,
                   ),
                 ),
-                const SizedBox(height: 4), 
-                
+                const SizedBox(
+                  height: 4,
+                ), // Jarak antara kategori dan nama produk
+                // ========================================================================
                 Text(
                   item.nama,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
