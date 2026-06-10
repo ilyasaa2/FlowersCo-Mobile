@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../../core/constants.dart';
 
-class ForgotPasswordPage extends StatelessWidget {
+class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
+
+  @override
+  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+}
+
+class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+  final TextEditingController emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -13,21 +22,14 @@ class ForgotPasswordPage extends StatelessWidget {
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 20,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
 
               child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 360,
-                ),
+                constraints: const BoxConstraints(maxWidth: 360),
 
                 child: Column(
                   children: [
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    const SizedBox(height: 10),
 
                     const Text(
                       "Flowers.co",
@@ -39,9 +41,7 @@ class ForgotPasswordPage extends StatelessWidget {
                       ),
                     ),
 
-                    const SizedBox(
-                      height: 28,
-                    ),
+                    const SizedBox(height: 28),
 
                     Container(
                       width: double.infinity,
@@ -54,9 +54,7 @@ class ForgotPasswordPage extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Colors.white,
 
-                        borderRadius: BorderRadius.circular(
-                          22,
-                        ),
+                        borderRadius: BorderRadius.circular(22),
 
                         boxShadow: const [
                           BoxShadow(
@@ -82,10 +80,7 @@ class ForgotPasswordPage extends StatelessWidget {
 
                       child: Column(
                         children: [
-
-                          const SizedBox(
-                            height: 10,
-                          ),
+                          const SizedBox(height: 10),
 
                           const Text(
                             "Lupa Kata Sandi",
@@ -98,9 +93,7 @@ class ForgotPasswordPage extends StatelessWidget {
                             ),
                           ),
 
-                          const SizedBox(
-                            height: 14,
-                          ),
+                          const SizedBox(height: 14),
 
                           const Text(
                             "Masukkan alamat email Anda di bawah ini dan kami akan mengirimkan instruksi untuk mengatur ulang kata sandi Anda.",
@@ -109,15 +102,14 @@ class ForgotPasswordPage extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 13,
                               height: 1.6,
-                              color:Color.fromARGB(255, 178, 132, 150),
+                              color: Color.fromARGB(255, 178, 132, 150),
                             ),
                           ),
 
-                          const SizedBox(
-                            height: 30,
-                          ),
+                          const SizedBox(height: 30),
 
                           TextField(
+                            controller: emailController,
                             decoration: InputDecoration(
                               hintText: "Alamat Email",
                               hintStyle: TextStyle(
@@ -131,19 +123,14 @@ class ForgotPasswordPage extends StatelessWidget {
                               ),
 
                               filled: true,
-                              fillColor: const Color(
-                                0xFFFFF7F9,
-                              ),
+                              fillColor: const Color(0xFFFFF7F9),
 
-                              contentPadding:
-                                  const EdgeInsets.symmetric(
+                              contentPadding: const EdgeInsets.symmetric(
                                 vertical: 16,
                               ),
 
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(
-                                  14,
-                                ),
+                                borderRadius: BorderRadius.circular(14),
 
                                 borderSide: BorderSide(
                                   color: Colors.pink.shade100,
@@ -151,9 +138,7 @@ class ForgotPasswordPage extends StatelessWidget {
                               ),
 
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(
-                                  14,
-                                ),
+                                borderRadius: BorderRadius.circular(14),
 
                                 borderSide: BorderSide(
                                   color: Colors.pink.shade100,
@@ -161,33 +146,56 @@ class ForgotPasswordPage extends StatelessWidget {
                               ),
 
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(
-                                  14,
-                                ),
+                                borderRadius: BorderRadius.circular(14),
 
-                                borderSide:
-                                    const BorderSide(
+                                borderSide: const BorderSide(
                                   color: AppColors.primaryPink,
                                 ),
                               ),
                             ),
                           ),
 
-                          const SizedBox(
-                            height: 28,
-                          ),
+                          const SizedBox(height: 28),
 
                           SizedBox(
                             width: double.infinity,
                             height: 52,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () async {
+                                try {
+                                  var response = await http.post(
+                                    Uri.parse(
+                                      "http://127.0.0.1/api_flowers/forgot_password.php",
+                                    ),
+                                    body: {"email": emailController.text},
+                                  );
+
+                                  print(response.body);
+
+                                  var data = jsonDecode(response.body);
+
+                                  if (data["success"] == true) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(data["message"]),
+                                      backgroundColor: Colors.green),
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(data["message"]),
+                                      backgroundColor: Colors.red),
+                                    );
+                                  }
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text("Error: $e")),
+                                  );
+                                }
+                              },
+
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primaryPink,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    12,
-                                  ),
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
 
@@ -204,9 +212,7 @@ class ForgotPasswordPage extends StatelessWidget {
                       ),
                     ),
 
-                    const SizedBox(
-                      height: 26,
-                    ),
+                    const SizedBox(height: 26),
 
                     TextButton(
                       onPressed: () {

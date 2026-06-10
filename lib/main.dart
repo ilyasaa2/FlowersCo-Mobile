@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       title: 'Flowers.co',
       theme: ThemeData(useMaterial3: true, primarySwatch: Colors.pink),
 
-      initialRoute: '/home',
+      initialRoute: '/',
 
       routes: {
         '/': (context) => const LoginPage(),

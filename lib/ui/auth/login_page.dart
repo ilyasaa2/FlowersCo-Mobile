@@ -13,11 +13,11 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _isObscure = true;
+  bool _isForgotHover = false;
 
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController emailController = TextEditingController();
-
   final TextEditingController passwordController = TextEditingController();
 
   @override
@@ -223,19 +223,46 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
 
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  '/forgot-password',
-                                );
+                            MouseRegion(
+                              cursor: SystemMouseCursors.click,
+
+                              onEnter: (_) {
+                                setState(() {
+                                  _isForgotHover = true;
+                                });
                               },
 
-                              child: const Text(
-                                "Lupa Kata Sandi?",
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: AppColors.primaryPink,
+                              onExit: (_) {
+                                setState(() {
+                                  _isForgotHover = false;
+                                });
+                              },
+
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    '/forgot-password',
+                                  );
+                                },
+
+                                child: AnimatedDefaultTextStyle(
+                                  duration: const Duration(milliseconds: 150),
+
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: _isForgotHover
+                                        ? const Color(0xFFB92A70)
+                                        : AppColors.primaryPink,
+
+                                    decoration: _isForgotHover
+                                        ? TextDecoration.underline
+                                        : TextDecoration.none,
+
+                                    decorationColor: AppColors.primaryPink,
+                                  ),
+
+                                  child: const Text("Lupa Kata Sandi?"),
                                 ),
                               ),
                             ),
