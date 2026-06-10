@@ -132,7 +132,7 @@ class KeranjangPage extends StatelessWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: Image.network(
-                              'http://localhost/api_flowers/img/${item.gambar}', // Pastikan URL lengkap
+                              'http://localhost/api_flowers/img/${item.gambar}',
                               width: 80,
                               height: 80,
                               fit: BoxFit.cover,

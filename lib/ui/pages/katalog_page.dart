@@ -312,8 +312,8 @@ class _KatalogPageState extends State<KatalogPage> {
                 Positioned.fill(
                   child: ClipRRect(
                     borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                    child: Image.asset(
-                      'assets/images/${item.gambar}',
+                    child: Image.network(
+                      'http://localhost/api_flowers/img/${item.gambar}',
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
