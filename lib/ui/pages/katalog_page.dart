@@ -14,13 +14,14 @@ class KatalogPage extends StatefulWidget {
 class _KatalogPageState extends State<KatalogPage> {
   // Base URL Server Backend (Disarankan pakai IP Local PC Anda jika testing via HP/Emulator)
   // Contoh: 'http://192.168.1.10/api_flowers/'
-  final String baseUrl = 'http://localhost/api_flowers'; 
+  final String baseUrl =
+      'https://pandemic-turbofan-alone.ngrok-free.dev/api_flowers';
 
   List<Product> _allProducts = [];
   List<Product> _filteredProducts = [];
   bool _isLoading = true;
   String _errorMessage = '';
-  
+
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -40,7 +41,7 @@ class _KatalogPageState extends State<KatalogPage> {
         List<Product> products = body
             .map((dynamic item) => Product.fromJson(item))
             .toList();
-        
+
         setState(() {
           _allProducts = products;
           _filteredProducts = products;
@@ -67,8 +68,10 @@ class _KatalogPageState extends State<KatalogPage> {
         _filteredProducts = _allProducts;
       } else {
         _filteredProducts = _allProducts
-            .where((product) =>
-                product.nama.toLowerCase().contains(query.toLowerCase()))
+            .where(
+              (product) =>
+                  product.nama.toLowerCase().contains(query.toLowerCase()),
+            )
             .toList();
       }
     });
@@ -117,7 +120,8 @@ class _KatalogPageState extends State<KatalogPage> {
                     ),
                     child: TextField(
                       controller: _searchController,
-                      onChanged: _filterSearch, // Memanggil filter setiap ada perubahan teks
+                      onChanged:
+                          _filterSearch, // Memanggil filter setiap ada perubahan teks
                       decoration: const InputDecoration(
                         hintText: 'Cari produk...',
                         hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
@@ -147,9 +151,7 @@ class _KatalogPageState extends State<KatalogPage> {
             ),
 
             // --- PRODUCT GRID AREA ---
-            Expanded(
-              child: _buildProductContent(),
-            ),
+            Expanded(child: _buildProductContent()),
           ],
         ),
       ),
@@ -179,9 +181,7 @@ class _KatalogPageState extends State<KatalogPage> {
     }
 
     if (_filteredProducts.isEmpty) {
-      return const Center(
-        child: Text('Produk tidak ditemukan.'),
-      );
+      return const Center(child: Text('Produk tidak ditemukan.'));
     }
 
     return GridView.builder(
@@ -191,7 +191,8 @@ class _KatalogPageState extends State<KatalogPage> {
         crossAxisCount: 2,
         crossAxisSpacing: 16,
         mainAxisSpacing: 20,
-        childAspectRatio: 0.58, // Disesuaikan agar tombol "Tambah ke Keranjang" aman dari overflow
+        childAspectRatio:
+            0.58, // Disesuaikan agar tombol "Tambah ke Keranjang" aman dari overflow
       ),
       itemBuilder: (context, index) {
         return _buildProductCard(
@@ -202,7 +203,11 @@ class _KatalogPageState extends State<KatalogPage> {
     );
   }
 
-  Widget _buildFilterChip(String label, {bool isSelected = false, IconData? icon}) {
+  Widget _buildFilterChip(
+    String label, {
+    bool isSelected = false,
+    IconData? icon,
+  }) {
     return Container(
       margin: const EdgeInsets.only(right: 8),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -233,7 +238,10 @@ class _KatalogPageState extends State<KatalogPage> {
     );
   }
 
-  Widget _buildProductCard({required BuildContext context, required Product item}) {
+  Widget _buildProductCard({
+    required BuildContext context,
+    required Product item,
+  }) {
     bool isBestSeller = item.kategori == 'Best Seller';
 
     return Container(
@@ -256,15 +264,21 @@ class _KatalogPageState extends State<KatalogPage> {
               children: [
                 Positioned.fill(
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                    child: Image.asset(
-                      'assets/images/${item.gambar}',
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(16),
+                    ),
+                    child: Image.network(
+                      'https://pandemic-turbofan-alone.ngrok-free.dev/Flowersco/img/${item.gambar}',
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
                           color: Colors.grey[200],
                           child: const Center(
-                            child: Icon(Icons.broken_image, color: Colors.grey, size: 40),
+                            child: Icon(
+                              Icons.broken_image,
+                              color: Colors.grey,
+                              size: 40,
+                            ),
                           ),
                         );
                       },
@@ -276,7 +290,10 @@ class _KatalogPageState extends State<KatalogPage> {
                     top: 8,
                     left: 8,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: const Color(0xFFBC1A6F),
                         borderRadius: BorderRadius.circular(8),
@@ -300,8 +317,12 @@ class _KatalogPageState extends State<KatalogPage> {
                       bool isFavorited = wishlist.any((e) => e.id == item.id);
                       return IconButton(
                         icon: Icon(
-                          isFavorited ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                          color: isFavorited ? const Color(0xFFBC1A6F) : Colors.black45,
+                          isFavorited
+                              ? Icons.favorite_rounded
+                              : Icons.favorite_border_rounded,
+                          color: isFavorited
+                              ? const Color(0xFFBC1A6F)
+                              : Colors.black45,
                           size: 26,
                         ),
                         onPressed: () {
@@ -321,22 +342,29 @@ class _KatalogPageState extends State<KatalogPage> {
               children: [
                 // ==================== TAMBAHAN TEKS KATEGORI DI SINI ====================
                 Text(
-                  (item.kategori ?? '').isNotEmpty && item.kategori != 'Best Seller'
+                  (item.kategori ?? '').isNotEmpty &&
+                          item.kategori != 'Best Seller'
                       ? item.kategori!.toUpperCase()
                       : 'UMUM',
                   style: const TextStyle(
-                    color: Color(0xFFBC1A6F), // Warna pink magenta sesuai tema aplikasi Anda
+                    color: Color(
+                      0xFFBC1A6F,
+                    ), // Warna pink magenta sesuai tema aplikasi Anda
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.1,
                   ),
                 ),
-                const SizedBox(height: 4), // Jarak antara kategori dan nama produk
+                const SizedBox(
+                  height: 4,
+                ), // Jarak antara kategori dan nama produk
                 // ========================================================================
-                
                 Text(
                   item.nama,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

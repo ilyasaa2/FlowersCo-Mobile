@@ -132,7 +132,7 @@ class KeranjangPage extends StatelessWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: Image.network(
-                              'http://localhost/api_flowers/img/${item.gambar}', // Pastikan URL lengkap
+                              'https://pandemic-turbofan-alone.ngrok-free.dev/Flowersco/img/${item.gambar}', // Pastikan URL lengkap
                               width: 80,
                               height: 80,
                               fit: BoxFit.cover,
@@ -250,7 +250,7 @@ class KeranjangPage extends StatelessWidget {
                                 "subtitle": "Kategori: ${item.kategori}",
                                 "price": item.harga.toInt(),
                                 "imageUrl":
-                                    'http://localhost/api_flowers/img/${item.gambar}',
+                                    'https://pandemic-turbofan-alone.ngrok-free.dev/Flowersco/img/${item.gambar}',
                                 "qty": qtyMap[item.id],
                               };
                             }).toList();
