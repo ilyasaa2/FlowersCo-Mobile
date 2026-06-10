@@ -1,34 +1,40 @@
 import 'package:flutter/material.dart';
-import 'main_navigation_page.dart';
 
 class HomePage extends StatelessWidget {
-  final VoidCallback onNavigateToKatalog; // Definisi callback
+  final Function(String) onNavigateToKatalog; // Callback diubah agar bisa mengirim data teks kategori
 
   const HomePage({super.key, required this.onNavigateToKatalog});
 
-  // WIDGET HELPER: Kartu Kesempatan
-  Widget _buildOccasionCard(String title, String imageUrl) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        image: DecorationImage(
-          image: NetworkImage(imageUrl),
-          fit: BoxFit.cover,
-        ),
-      ),
+  // WIDGET HELPER: Kartu Kesempatan (Mendukung aksi klik)
+  Widget _buildOccasionCard({
+    required String title,
+    required String imageUrl,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          color: Colors.black.withOpacity(0.35),
+          image: DecorationImage(
+            image: NetworkImage(imageUrl),
+            fit: BoxFit.cover,
+          ),
         ),
-        alignment: Alignment.bottomLeft,
-        padding: const EdgeInsets.all(14),
-        child: Text(
-          title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            color: Colors.black.withOpacity(0.35),
+          ),
+          alignment: Alignment.bottomLeft,
+          padding: const EdgeInsets.all(14),
+          child: Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
           ),
         ),
       ),
@@ -207,17 +213,7 @@ class HomePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              MainNavigationPage(initialIndex: 1),
-                        ),
-                        (route) =>
-                            false, // Menghapus tumpukan navigasi sebelumnya
-                      );
-                    },
+                    onPressed: () => onNavigateToKatalog('Semua Produk'), // Pindah tab halus
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFBC1A6F),
                       shape: RoundedRectangleBorder(
@@ -268,20 +264,24 @@ class HomePage extends StatelessWidget {
               childAspectRatio: 1.0,
               children: [
                 _buildOccasionCard(
-                  "Ulang Birthday",
-                  'https://images.unsplash.com/photo-1533616688419-b7a585564566?q=80&w=500',
+                  title: "Ulang Tahun",
+                  imageUrl: 'https://images.unsplash.com/photo-1533616688419-b7a585564566?q=80&w=500',
+                  onTap: () => onNavigateToKatalog('Ulang Tahun'),
                 ),
                 _buildOccasionCard(
-                  "Valentine",
-                  'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=500',
+                  title: "Anniversary",
+                  imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=500',
+                  onTap: () => onNavigateToKatalog('Anniversary'),
                 ),
                 _buildOccasionCard(
-                  "Pernikahan",
-                  'https://images.unsplash.com/photo-1523438885200-e635ba2c371e?q=80&w=500',
+                  title: "Pernikahan",
+                  imageUrl: 'https://images.unsplash.com/photo-1523438885200-e635ba2c371e?q=80&w=500',
+                  onTap: () => onNavigateToKatalog('Pernikahan'),
                 ),
                 _buildOccasionCard(
-                  "Belasungkawa",
-                  'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=500',
+                  title: "Wisuda",
+                  imageUrl: 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=500',
+                  onTap: () => onNavigateToKatalog('Wisuda'),
                 ),
               ],
             ),
@@ -300,7 +300,7 @@ class HomePage extends StatelessWidget {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => onNavigateToKatalog('Semua Produk'),
                   child: const Text(
                     "Lihat Semua",
                     style: TextStyle(
@@ -316,17 +316,14 @@ class HomePage extends StatelessWidget {
           _buildVerticalProductCard(
             name: "Mimpi Peony Merah Muda",
             price: "Rp 650.000",
-            desc:
-                "Peony merah muda lembut dan dedaunan musiman dirangkai dalam satu keselarasan.",
-            imageUrl:
-                'https://images.unsplash.com/photo-1561181286-d3fee7d55364?q=80&w=600',
+            desc: "Peony merah muda lembut dan dedaunan musiman dirangkai dalam satu keselarasan.",
+            imageUrl: 'https://images.unsplash.com/photo-1561181286-d3fee7d55364?q=80&w=600',
           ),
           _buildVerticalProductCard(
             name: "Beri Tengah Midnight",
             price: "Rp 1.250.000",
             desc: "Mawar merah tua, dahlia burgundy, dan dedaunan subur.",
-            imageUrl:
-                'https://images.unsplash.com/photo-1525253086316-d0c936c814f8?q=80&w=600',
+            imageUrl: 'https://images.unsplash.com/photo-1525253086316-d0c936c814f8?q=80&w=600',
           ),
           const SizedBox(height: 20),
         ],

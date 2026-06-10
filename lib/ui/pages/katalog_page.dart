@@ -5,15 +5,15 @@ import '../../data/models/product_model.dart';
 import '../../data/models/app_state.dart';
 
 class KatalogPage extends StatefulWidget {
-  const KatalogPage({super.key});
+  final String? initialCategory; // Menerima lemparan data kategori awal dari HomePage
+
+  const KatalogPage({super.key, this.initialCategory});
 
   @override
   State<KatalogPage> createState() => _KatalogPageState();
 }
 
 class _KatalogPageState extends State<KatalogPage> {
-  // Base URL Server Backend (Disarankan pakai IP Local PC Anda jika testing via HP/Emulator)
-  // Contoh: 'http://192.168.1.10/api_flowers/'
   final String baseUrl = 'http://localhost/api_flowers'; 
 
   List<Product> _allProducts = [];
@@ -21,15 +21,28 @@ class _KatalogPageState extends State<KatalogPage> {
   bool _isLoading = true;
   String _errorMessage = '';
   
+  String _selectedCategory = 'Semua Produk'; // Menyimpan state kategori aktif di Katalog
   final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    _selectedCategory = widget.initialCategory ?? 'Semua Produk';
     _loadProducts();
   }
 
-  // Mengambil data dari database hanya sekali saat init
+  // JIKA WIDGET DI-REBUILD OLEH PARENT (Ditekan dari HomePage)
+  @override
+  void didUpdateWidget(covariant KatalogPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialCategory != oldWidget.initialCategory) {
+      setState(() {
+        _selectedCategory = widget.initialCategory ?? 'Semua Produk';
+      });
+      _applyFilter(); // Terapkan filter otomatis
+    }
+  }
+
   Future<void> _loadProducts() async {
     final url = Uri.parse('$baseUrl/get_products.php');
     try {
@@ -43,9 +56,9 @@ class _KatalogPageState extends State<KatalogPage> {
         
         setState(() {
           _allProducts = products;
-          _filteredProducts = products;
           _isLoading = false;
         });
+        _applyFilter(); // Filter data setelah sukses dimuat pertama kali
       } else {
         setState(() {
           _errorMessage = 'Gagal memuat produk dari server';
@@ -60,17 +73,20 @@ class _KatalogPageState extends State<KatalogPage> {
     }
   }
 
-  // Fungsi memfilter produk berdasarkan input search bar
-  void _filterSearch(String query) {
+  // FUNGSI UTAMA: Menggabungkan Filter Kategori & Filter Search Bar
+  void _applyFilter() {
+    String query = _searchController.text.toLowerCase();
     setState(() {
-      if (query.isEmpty) {
-        _filteredProducts = _allProducts;
-      } else {
-        _filteredProducts = _allProducts
-            .where((product) =>
-                product.nama.toLowerCase().contains(query.toLowerCase()))
-            .toList();
-      }
+      _filteredProducts = _allProducts.where((product) {
+        // 1. Cek search bar cocok atau tidak
+        bool matchesSearch = product.nama.toLowerCase().contains(query);
+        
+        // 2. Cek kategori cocok atau tidak (Gunakan toLowerCase agar aman dari perbedaan huruf kapital di DB)
+        bool matchesCategory = _selectedCategory == 'Semua Produk' ||
+            product.kategori.toLowerCase() == _selectedCategory.toLowerCase();
+
+        return matchesSearch && matchesCategory;
+      }).toList();
     });
   }
 
@@ -88,7 +104,7 @@ class _KatalogPageState extends State<KatalogPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // --- HEADER & SEARCH BAR (Dibuat tetap di atas / tidak ikut scroll) ---
+            // --- HEADER & SEARCH BAR ---
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
               child: Column(
@@ -109,7 +125,7 @@ class _KatalogPageState extends State<KatalogPage> {
                   ),
                   const SizedBox(height: 20),
 
-                  // --- SEARCH BAR AKTIF ---
+                  // --- SEARCH BAR ---
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[100],
@@ -117,7 +133,7 @@ class _KatalogPageState extends State<KatalogPage> {
                     ),
                     child: TextField(
                       controller: _searchController,
-                      onChanged: _filterSearch, // Memanggil filter setiap ada perubahan teks
+                      onChanged: (value) => _applyFilter(), // Filter real-time setiap ngetik
                       decoration: const InputDecoration(
                         hintText: 'Cari produk...',
                         hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
@@ -129,15 +145,50 @@ class _KatalogPageState extends State<KatalogPage> {
                   ),
                   const SizedBox(height: 16),
 
-                  // --- FILTER CHIPS ---
+                  // --- FILTER CHIPS AKTIF ---
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        _buildFilterChip('Semua Produk', isSelected: true),
-                        _buildFilterChip('Valentine', icon: Icons.favorite),
-                        _buildFilterChip('Ulang Tahun', icon: Icons.cake),
-                        _buildFilterChip('Wisuda', icon: Icons.school),
+                        _buildFilterChip('Semua Produk', 
+                          isSelected: _selectedCategory == 'Semua Produk',
+                          onTap: () {
+                            setState(() => _selectedCategory = 'Semua Produk');
+                            _applyFilter();
+                          }
+                        ),
+                        _buildFilterChip('Anniversary', 
+                          icon: Icons.favorite,
+                          isSelected: _selectedCategory == 'Anniversary',
+                          onTap: () {
+                            setState(() => _selectedCategory = 'Anniversary');
+                            _applyFilter();
+                          }
+                        ),
+                        _buildFilterChip('Ulang Tahun', 
+                          icon: Icons.cake,
+                          isSelected: _selectedCategory == 'Ulang Tahun',
+                          onTap: () {
+                            setState(() => _selectedCategory = 'Ulang Tahun');
+                            _applyFilter();
+                          }
+                        ),
+                        _buildFilterChip('Pernikahan', 
+                          icon: Icons.wc,
+                          isSelected: _selectedCategory == 'Pernikahan',
+                          onTap: () {
+                            setState(() => _selectedCategory = 'Pernikahan');
+                            _applyFilter();
+                          }
+                        ),
+                        _buildFilterChip('Wisuda', 
+                          icon: Icons.school,
+                          isSelected: _selectedCategory == 'Wisuda',
+                          onTap: () {
+                            setState(() => _selectedCategory = 'Wisuda');
+                            _applyFilter();
+                          }
+                        ),
                       ],
                     ),
                   ),
@@ -191,7 +242,7 @@ class _KatalogPageState extends State<KatalogPage> {
         crossAxisCount: 2,
         crossAxisSpacing: 16,
         mainAxisSpacing: 20,
-        childAspectRatio: 0.58, // Disesuaikan agar tombol "Tambah ke Keranjang" aman dari overflow
+        childAspectRatio: 0.58, 
       ),
       itemBuilder: (context, index) {
         return _buildProductCard(
@@ -202,33 +253,37 @@ class _KatalogPageState extends State<KatalogPage> {
     );
   }
 
-  Widget _buildFilterChip(String label, {bool isSelected = false, IconData? icon}) {
-    return Container(
-      margin: const EdgeInsets.only(right: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: isSelected ? const Color(0xFFBC1A6F) : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFBC1A6F), width: 1),
-      ),
-      child: Row(
-        children: [
-          if (icon != null)
-            Icon(
-              icon,
-              size: 16,
-              color: isSelected ? Colors.white : const Color(0xFFBC1A6F),
+  // Widget filter chip yang sekarang dibungkus GestureDetector agar responsif terhadap klik
+  Widget _buildFilterChip(String label, {required bool isSelected, IconData? icon, required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(right: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFFBC1A6F) : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: const Color(0xFFBC1A6F), width: 1),
+        ),
+        child: Row(
+          children: [
+            if (icon != null)
+              Icon(
+                icon,
+                size: 16,
+                color: isSelected ? Colors.white : const Color(0xFFBC1A6F),
+              ),
+            if (icon != null) const SizedBox(width: 4),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? Colors.white : const Color(0xFFBC1A6F),
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
             ),
-          if (icon != null) const SizedBox(width: 4),
-          Text(
-            label,
-            style: TextStyle(
-              color: isSelected ? Colors.white : const Color(0xFFBC1A6F),
-              fontWeight: FontWeight.bold,
-              fontSize: 13,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -319,20 +374,18 @@ class _KatalogPageState extends State<KatalogPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ==================== TAMBAHAN TEKS KATEGORI DI SINI ====================
                 Text(
-                  (item.kategori ?? '').isNotEmpty && item.kategori != 'Best Seller'
-                      ? item.kategori!.toUpperCase()
+                  item.kategori.isNotEmpty && item.kategori != 'Best Seller'
+                      ? item.kategori.toUpperCase()
                       : 'UMUM',
                   style: const TextStyle(
-                    color: Color(0xFFBC1A6F), // Warna pink magenta sesuai tema aplikasi Anda
+                    color: Color(0xFFBC1A6F), 
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.1,
                   ),
                 ),
-                const SizedBox(height: 4), // Jarak antara kategori dan nama produk
-                // ========================================================================
+                const SizedBox(height: 4), 
                 
                 Text(
                   item.nama,
