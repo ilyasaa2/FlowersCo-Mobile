@@ -257,11 +257,10 @@ class _KatalogPageState extends State<KatalogPage> {
                 Positioned.fill(
                   child: ClipRRect(
                     borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                    child: Image.network(
-                      '$baseUrl/img/${item.gambar}',
+                    child: Image.asset(
+                      'assets/images/${item.gambar}',
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
-                        // Callback jika network image diblokir CORS atau URL rusak
                         return Container(
                           color: Colors.grey[200],
                           child: const Center(
@@ -320,6 +319,21 @@ class _KatalogPageState extends State<KatalogPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // ==================== TAMBAHAN TEKS KATEGORI DI SINI ====================
+                Text(
+                  (item.kategori ?? '').isNotEmpty && item.kategori != 'Best Seller'
+                      ? item.kategori!.toUpperCase()
+                      : 'UMUM',
+                  style: const TextStyle(
+                    color: Color(0xFFBC1A6F), // Warna pink magenta sesuai tema aplikasi Anda
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.1,
+                  ),
+                ),
+                const SizedBox(height: 4), // Jarak antara kategori dan nama produk
+                // ========================================================================
+                
                 Text(
                   item.nama,
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
