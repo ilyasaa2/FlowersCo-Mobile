@@ -79,14 +79,6 @@ class CustomSidebar extends StatelessWidget {
                   ),
                   _buildMenuItem(
                     context: context,
-                    icon: Icons.assignment_rounded,
-                    title: 'Riwayat Pesanan',
-                    targetRoute:
-                        '/riwayat-pesanan', // 👈 Sesuai nama di main.dart kamu
-                    currentRoute: currentRoute,
-                  ),
-                  _buildMenuItem(
-                    context: context,
                     icon: Icons.local_florist_rounded,
                     title: 'Panduan Perawatan',
                     targetRoute:

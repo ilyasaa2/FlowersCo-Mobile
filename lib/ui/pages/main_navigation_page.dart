@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'homepage.dart';
 import 'katalog_page.dart';
-import 'profile_page.dart';
 import 'wishlist_page.dart';
+import 'profile_page.dart';
 import '../components/custom_sidebar.dart';
+import 'keranjang_page.dart';
+import '../../data/models/product_model.dart';
+import '../../data/models/app_state.dart';
+
+// Silahkan sesuaikan import Wishlist dan Profile di bawah ini dengan project Anda
+// import 'wishlist/wishlist_page.dart'; 
+// import 'profile/profile_page.dart';
 
 class MainNavigationPage extends StatefulWidget {
   final int initialIndex;
-
   const MainNavigationPage({super.key, this.initialIndex = 0});
 
   @override
@@ -15,100 +21,101 @@ class MainNavigationPage extends StatefulWidget {
 }
 
 class _MainNavigationPageState extends State<MainNavigationPage> {
-  late int _currentIndex;
+  int _selectedIndex = 0;
+  String _selectedCategory = 'Semua Produk'; // State untuk menampung kategori aktif
 
   @override
   void initState() {
     super.initState();
-    _currentIndex = widget.initialIndex;
+    _selectedIndex = widget.initialIndex;
   }
-
-  // Daftar halaman utama aplikasi
-  List<Widget> get _pages => [
-    HomePage(
-      onNavigateToKatalog: () {
-        setState(() {
-          _currentIndex = 1;
-        });
-      },
-    ),
-    const KatalogPage(),
-    const WishlistPage(),
-    const ProfilePage(),
-  ];
 
   @override
   Widget build(BuildContext context) {
+    // List halaman ditaruh di dalam build agar selalu mendapat pembaruan variabel _selectedCategory
+    final List<Widget> _pages = [
+      HomePage(
+        onNavigateToKatalog: (category) {
+          setState(() {
+            _selectedCategory = category;
+            _selectedIndex = 1; // Pindah otomatis ke tab Katalog
+          });
+        },
+      ),
+      KatalogPage(initialCategory: _selectedCategory), 
+      const WishlistPage(), 
+      const ProfilePage(),  
+    ];
+
     return Scaffold(
-      // 1. Tambahkan AppBar global agar tombol menu tiga garis otomatis muncul di semua sub-halaman
+      drawer: const CustomSidebar(),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu, color: Color(0xFFBC1A6F)),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
         centerTitle: true,
-        iconTheme: const IconThemeData(
-          color: Colors.black87,
-        ), // Mengubah warna ikon menu menjadi hitam/gelap
         title: const Text(
-          'Flowers.co',
+          "Flowers.co",
           style: TextStyle(
-            fontStyle: FontStyle.italic,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFFBC1A6F), // Warna pink khas FlowersCo kamu
+            color: Color(0xFFBC1A6F),
             fontSize: 22,
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
           ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.shopping_bag_outlined,
-              color: Color(0xFFBC1A6F),
-            ),
-            onPressed: () {
-              Navigator.pushNamed(context, '/keranjang');
+          ValueListenableBuilder<List<Product>>(
+            valueListenable: AppState.cartNotifier,
+            builder: (context, cart, child) {
+              return Badge(
+                label: Text(cart.length.toString()),
+                isLabelVisible: cart.isNotEmpty,
+                backgroundColor: const Color(0xFFBC1A6F),
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.shopping_bag_outlined,
+                    color: Color(0xFFBC1A6F),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const KeranjangPage()),
+                    );
+                  },
+                ),
+              );
             },
           ),
         ],
       ),
-
-      drawer: const CustomSidebar(),
-
-      body: IndexedStack(index: _currentIndex, children: _pages),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages, // Menggunakan IndexedStack membuat data katalog tidak ter-reset saat pindah tab
+      ),
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
         selectedItemColor: const Color(0xFFBC1A6F),
-        unselectedItemColor: Colors.black45,
-        currentIndex: _currentIndex,
-        selectedLabelStyle: const TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.bold,
-        ),
-        unselectedLabelStyle: const TextStyle(fontSize: 11),
-        onTap: (int index) {
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+        onTap: (index) {
           setState(() {
-            _currentIndex = index; // Pindah halaman utama saat ditekan
+            _selectedIndex = index;
+            // Jika user menekan tombol Katalog langsung dari nav bar bawah, tampilkan semua produk
+            if (index == 1) {
+              _selectedCategory = 'Semua Produk';
+            }
           });
         },
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Beranda',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.local_florist_outlined),
-            activeIcon: Icon(Icons.local_florist),
-            label: 'Katalog',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            activeIcon: Icon(Icons.favorite),
-            label: 'Wishlist',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Akun',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.assignment), label: 'Katalog'),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Wishlist'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
         ],
       ),
     );
